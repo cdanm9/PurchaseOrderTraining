@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="PO_STAR_JOIN" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="PO_STAR_JOIN"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CAPM_TABLE_PO_HEADER">
+    <resourceUri>CAPM_TABLE_PO_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="CAPM_TABLE_PO_ITEM">
+    <resourceUri>CAPM_TABLE_PO_ITEM</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="PO_HEADER">
+    <viewAttributes>
+      <viewAttribute id="CREATEDAT"/>
+      <viewAttribute id="CREATEDBY"/>
+      <viewAttribute id="MODIFIEDAT"/>
+      <viewAttribute id="MODIFIEDBY"/>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="PO_NUMBER"/>
+      <viewAttribute id="CREATIONDATE"/>
+      <viewAttribute id="DELIVERYDATE"/>
+      <viewAttribute id="STATUS"/>
+      <viewAttribute id="MADEBY"/>
+      <viewAttribute id="PCODE"/>
+      <viewAttribute id="COMPANYCODE"/>
+      <viewAttribute id="DELETE"/>
+      <viewAttribute id="CRITICALITY"/>
+      <viewAttribute id="TOTAL_AMOUNT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CAPM_TABLE_PO_HEADER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="PO_ITEM">
+    <viewAttributes>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="PO_NUMBER"/>
+      <viewAttribute id="PO_ITEM_NUM"/>
+      <viewAttribute id="MCODE"/>
+      <viewAttribute id="QUANTITY"/>
+      <viewAttribute id="AMOUNT"/>
+      <viewAttribute id="PO_HEADER_MASTER_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CAPM_TABLE_PO_ITEM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="POHEADERITEM" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="CREATEDBY"/>
+      <viewAttribute id="MODIFIEDAT" aggregationType="min"/>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="PO_NUMBER" aggregationType="sum"/>
+      <viewAttribute id="CREATIONDATE"/>
+      <viewAttribute id="DELIVERYDATE"/>
+      <viewAttribute id="STATUS" aggregationType="sum"/>
+      <viewAttribute id="MADEBY"/>
+      <viewAttribute id="PCODE"/>
+      <viewAttribute id="COMPANYCODE"/>
+      <viewAttribute id="DELETE"/>
+      <viewAttribute id="TOTAL_AMOUNT" aggregationType="sum"/>
+      <viewAttribute id="ID_1"/>
+      <viewAttribute id="PO_NUMBER_1" aggregationType="sum"/>
+      <viewAttribute id="PO_ITEM_NUM" aggregationType="sum"/>
+      <viewAttribute id="MCODE"/>
+      <viewAttribute id="QUANTITY" aggregationType="sum"/>
+      <viewAttribute id="AMOUNT" aggregationType="sum"/>
+      <viewAttribute id="PO_HEADER_MASTER_ID"/>
+      <viewAttribute hidden="true" id="JOIN$ID$PO_HEADER_MASTER_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="PO_HEADER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY" source="CREATEDBY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIEDAT" source="MODIFIEDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID" source="ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_NUMBER" source="PO_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATIONDATE" source="CREATIONDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DELIVERYDATE" source="DELIVERYDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MADEBY" source="MADEBY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PCODE" source="PCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMPANYCODE" source="COMPANYCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DELETE" source="DELETE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_AMOUNT" source="TOTAL_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ID$PO_HEADER_MASTER_ID" source="ID"/>
+    </input>
+    <input node="PO_ITEM">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_1" source="ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_NUMBER_1" source="PO_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_ITEM_NUM" source="PO_ITEM_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MCODE" source="MCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QUANTITY" source="QUANTITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT" source="AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_HEADER_MASTER_ID" source="PO_HEADER_MASTER_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ID$PO_HEADER_MASTER_ID" source="PO_HEADER_MASTER_ID"/>
+    </input>
+    <joinAttribute name="JOIN$ID$PO_HEADER_MASTER_ID"/>
+  </calculationView>
+</calculationViews>
+
+<logicalModel id="POHEADERITEM">
+  <attributes>
+    <attribute id="CREATEDBY" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CREATEDBY"/>
+      <keyMapping columnObjectName="POHEADERITEM" columnName="CREATEDBY"/>
+    </attribute>
+    <attribute id="CREATIONDATE" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CREATIONDATE"/>
+      <keyMapping columnObjectName="POHEADERITEM" columnName="CREATIONDATE"/>
+    </attribute>
+    <attribute id="DELIVERYDATE" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DELIVERYDATE"/>
+      <keyMapping columnObjectName="POHEADERITEM" columnName="DELIVERYDATE"/>
+    </attribute>
+    <attribute id="MADEBY" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MADEBY"/>
+      <keyMapping columnObjectName="POHEADERITEM" columnName="MADEBY"/>
+    </attribute>
+    <attribute id="DELETE" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DELETE"/>
+      <keyMapping columnObjectName="POHEADERITEM" columnName="DELETE"/>
+    </attribute>
+  
+    <attribute id="PO_ITEM_NUM" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PO_ITEM_NUM"/>
+  
+      <keyMapping columnObjectName="POHEADERITEM" columnName="PO_ITEM_NUM"/>
+  
+    </attribute>
+    <attribute id="QUANTITY" order="10" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="QUANTITY"/>
+      <keyMapping columnObjectName="POHEADERITEM" columnName="QUANTITY"/>
+    </attribute>
+    <attribute id="AMOUNT" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AMOUNT"/>
+      <keyMapping columnObjectName="POHEADERITEM" columnName="AMOUNT"/>
+    </attribute>
+    <attribute id="PCODE$local">
+      <keyMapping columnObjectName="POHEADERITEM" columnName="PCODE"/>
+    </attribute>
+    <attribute id="COMPANYCODE$local">
+      <keyMapping columnObjectName="POHEADERITEM" columnName="COMPANYCODE"/>
+    </attribute>
+    <attribute id="STATUS$local">
+      <keyMapping columnObjectName="POHEADERITEM" columnName="STATUS"/>
+    </attribute>
+    <attribute id="MCODE$local">
+      <descriptions defaultDescription="MCODE"/>
+      <keyMapping columnObjectName="POHEADERITEM" columnName="MCODE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="MODIFIEDAT" order="2" aggregationType="min" measureType="simple">
+      <descriptions defaultDescription="MODIFIEDAT"/>
+      <measureMapping columnObjectName="POHEADERITEM" columnName="MODIFIEDAT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="PO_NUMBER" order="3" aggregationType="max" measureType="simple">
+      <descriptions defaultDescription="PO_NUMBER"/>
+      <measureMapping columnObjectName="POHEADERITEM" columnName="PO_NUMBER"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="TOTAL_AMOUNT" order="8" aggregationType="max" measureType="simple">
+      <descriptions defaultDescription="TOTAL_AMOUNT"/>
+      <measureMapping columnObjectName="POHEADERITEM" columnName="TOTAL_AMOUNT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+  <sharedDimensions>
+    <logicalJoin associatedObjectUri="PO_PLANT">
+      <attributes>
+        <attributeRef>PCODE$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>CODE</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_N" joinType="leftOuter" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference alias="PLCODE" attributeName="CODE"/>
+        <attributeReference alias="PLANT" attributeName="NAME"/>
+        <attributeReference alias="PCITY" attributeName="CITY"/>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+    <logicalJoin associatedObjectUri="PO_COMPANY">
+      <attributes>
+        <attributeRef>COMPANYCODE$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>CODE</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_N" joinType="leftOuter" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference alias="COMPANY" attributeName="NAME"/>
+        <attributeReference alias="CCODE" attributeName="CODE"/>
+        <attributeReference alias="CDESC" attributeName="DESC"/>
+        <attributeReference alias="CWEB" attributeName="WEBSITE"/>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+    <logicalJoin associatedObjectUri="PO_STATUS">
+      <attributes>
+        <attributeRef>STATUS$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>CODE</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_N" joinType="leftOuter" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference alias="SCODE" attributeName="CODE"/>
+        <attributeReference alias="STATUS" attributeName="DESC"/>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+    <logicalJoin associatedObjectUri="PO_MATERIAL">
+      <attributes>
+        <attributeRef>MCODE$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>CODE</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_N" joinType="leftOuter" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference alias="MRCODE" attributeName="CODE"/>
+        <attributeReference alias="MDESC" attributeName="DESC"/>
+        <attributeReference alias="MPRICE" attributeName="PRICE"/>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+  </sharedDimensions>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    
+  
+    <shape expanded="true" modelObjectName="PO_HEADER" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="12" y="367"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="PO_ITEM" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="197" y="367"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="POHEADERITEM" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="239"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="PO_HEADER" modelObjectNameSpace="POHEADERITEM" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="138"/>
+    </shape>
+    <shape modelObjectName="PO_ITEM" modelObjectNameSpace="POHEADERITEM" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="257" y="33"/>
+      <rectangleSize width="222"/>
+    </shape>
+    <shape modelObjectName="POHEADERITEM" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+      <upperLeftCorner x="-28" y="-143"/>
+      <rectangleSize width="222"/>
+    </shape>
+  
+    <shape modelObjectName="PO_PLANT" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="468" y="-123"/>
+      <rectangleSize width="128"/>
+    </shape>
+    <shape modelObjectName="PO_COMPANY" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="458" y="-9"/>
+      <rectangleSize width="148"/>
+    </shape>
+    <shape modelObjectName="PO_STATUS" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="275" y="-143"/>
+      <rectangleSize width="134"/>
+    </shape>
+    <shape modelObjectName="PO_MATERIAL" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="342" y="134"/>
+      <rectangleSize width="159"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

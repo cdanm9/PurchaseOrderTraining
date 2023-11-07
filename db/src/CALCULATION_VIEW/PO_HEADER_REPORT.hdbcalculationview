@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="PO_HEADER_REPORT" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="PO_HEADER_REPORT"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CAPM_TABLE_PO_HEADER">
+    <resourceUri>CAPM_TABLE_PO_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="CAPM_TABLE_PO_ITEM">
+    <resourceUri>CAPM_TABLE_PO_ITEM</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Purchase_Header">
+    <viewAttributes>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="PO_NUMBER"/>
+      <viewAttribute id="CREATIONDATE"/>
+      <viewAttribute id="DELIVERYDATE"/>
+      <viewAttribute id="STATUS"/>
+      <viewAttribute id="CREATEDBY"/>
+      <viewAttribute id="PCODE"/>
+      <viewAttribute id="COMPANYCODE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CAPM_TABLE_PO_HEADER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Purchase_Items">
+    <viewAttributes>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="PO_NUMBER"/>
+      <viewAttribute id="PO_ITEM_NUM"/>
+      <viewAttribute id="QUANTITY"/>
+      <viewAttribute id="AMOUNT"/>
+      <viewAttribute id="PO_HEADER_MASTER_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CAPM_TABLE_PO_ITEM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Purchase_Report" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="PO_NUMBER" aggregationType="sum"/>
+      <viewAttribute id="CREATIONDATE"/>
+      <viewAttribute id="DELIVERYDATE"/>
+      <viewAttribute id="STATUS" aggregationType="sum"/>
+      <viewAttribute id="CREATEDBY"/>
+      <viewAttribute id="PCODE"/>
+      <viewAttribute id="COMPANYCODE"/>
+      <viewAttribute id="PO_ITEM_NUM" aggregationType="sum"/>
+      <viewAttribute id="QUANTITY" aggregationType="sum"/>
+      <viewAttribute id="AMOUNT" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$ID$PO_HEADER_MASTER_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Purchase_Header">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_NUMBER" source="PO_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATIONDATE" source="CREATIONDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DELIVERYDATE" source="DELIVERYDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY" source="CREATEDBY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PCODE" source="PCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMPANYCODE" source="COMPANYCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ID$PO_HEADER_MASTER_ID" source="ID"/>
+    </input>
+    <input node="Purchase_Items">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_ITEM_NUM" source="PO_ITEM_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QUANTITY" source="QUANTITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT" source="AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ID$PO_HEADER_MASTER_ID" source="PO_HEADER_MASTER_ID"/>
+    </input>
+    <joinAttribute name="JOIN$ID$PO_HEADER_MASTER_ID"/>
+  </calculationView>
+</calculationViews>
+
+<logicalModel id="Purchase_Report">
+  <attributes>
+    <attribute id="PO_NUMBER" order="1" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PO_NUMBER"/>
+      <keyMapping columnObjectName="Purchase_Report" columnName="PO_NUMBER"/>
+    </attribute>
+    <attribute id="CREATIONDATE" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CREATIONDATE"/>
+      <keyMapping columnObjectName="Purchase_Report" columnName="CREATIONDATE"/>
+    </attribute>
+    <attribute id="DELIVERYDATE" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DELIVERYDATE"/>
+      <keyMapping columnObjectName="Purchase_Report" columnName="DELIVERYDATE"/>
+    </attribute>
+    <attribute id="CREATEDBY" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CREATEDBY"/>
+      <keyMapping columnObjectName="Purchase_Report" columnName="CREATEDBY"/>
+    </attribute>
+    <attribute id="PCODE" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PCODE"/>
+      <keyMapping columnObjectName="Purchase_Report" columnName="PCODE"/>
+    </attribute>
+    <attribute id="COMPANYCODE" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COMPANYCODE"/>
+      <keyMapping columnObjectName="Purchase_Report" columnName="COMPANYCODE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="STATUS" order="4" aggregationType="max" measureType="simple">
+      <descriptions defaultDescription="STATUS"/>
+      <measureMapping columnObjectName="Purchase_Report" columnName="STATUS"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="PO_ITEM_NUM" order="8" aggregationType="max" measureType="simple">
+      <descriptions defaultDescription="PO_ITEM_NUM"/>
+      <measureMapping columnObjectName="Purchase_Report" columnName="PO_ITEM_NUM"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="QUANTITY" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="QUANTITY"/>
+      <measureMapping columnObjectName="Purchase_Report" columnName="QUANTITY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="AMOUNT" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AMOUNT"/>
+      <measureMapping columnObjectName="Purchase_Report" columnName="AMOUNT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    
+  
+    <shape expanded="true" modelObjectName="Purchase_Header" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-5" y="317"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Purchase_Items" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="225" y="317"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Purchase_Report" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="192"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Purchase_Header" modelObjectNameSpace="Purchase_Report" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="172"/>
+    </shape>
+    <shape modelObjectName="Purchase_Items" modelObjectNameSpace="Purchase_Report" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="222"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+        <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="POApprovalService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="POHeader" EntityType="POApprovalService.POHeader">
+                    <NavigationPropertyBinding Path="Pl_Master" Target="PlantMaster"/>
+                    <NavigationPropertyBinding Path="Cp_Master" Target="CompanyMaster"/>
+                    <NavigationPropertyBinding Path="S_Master" Target="StatusMaster"/>
+                    <NavigationPropertyBinding Path="PO_Item_Master" Target="POItem"/>
+                    <NavigationPropertyBinding Path="PO_Attach_Master" Target="PO_Attachment"/>
+                    <NavigationPropertyBinding Path="PO_Event_Master" Target="POEvent"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="POHeader"/>
+                </EntitySet>
+                <EntitySet Name="POItem" EntityType="POApprovalService.POItem">
+                    <NavigationPropertyBinding Path="M_Master" Target="Material_Master"/>
+                    <NavigationPropertyBinding Path="PO_Header_Master" Target="POHeader"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="POItem"/>
+                </EntitySet>
+                <EntitySet Name="PlantMaster" EntityType="POApprovalService.PlantMaster"/>
+                <EntitySet Name="CompanyMaster" EntityType="POApprovalService.CompanyMaster"/>
+                <EntitySet Name="POEvent" EntityType="POApprovalService.POEvent"/>
+                <EntitySet Name="Material_Master" EntityType="POApprovalService.Material_Master">
+                    <NavigationPropertyBinding Path="Pl_Master" Target="PlantMaster"/>
+                </EntitySet>
+                <EntitySet Name="StatusMaster" EntityType="POApprovalService.StatusMaster"/>
+                <EntitySet Name="ApproverMaster" EntityType="POApprovalService.ApproverMaster"/>
+                <EntitySet Name="PO_Attachment" EntityType="POApprovalService.PO_Attachment">
+                    <NavigationPropertyBinding Path="AttachPOHeader" Target="POHeader"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="PO_Attachment"/>
+                </EntitySet>
+                <ActionImport Name="POApprove" Action="POApprovalService.POApprove"/>
+                <ActionImport Name="POComplete" Action="POApprovalService.POComplete"/>
+                <ActionImport Name="POReject" Action="POApprovalService.POReject"/>
+            </EntityContainer>
+            <EntityType Name="POHeader">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="PO_Number" Type="Edm.Int64"/>
+                <Property Name="CreationDate" Type="Edm.Date"/>
+                <Property Name="DeliveryDate" Type="Edm.Date"/>
+                <Property Name="Status" Type="Edm.Int32"/>
+                <Property Name="MadeBy" Type="Edm.String" MaxLength="20" DefaultValue="CDAN"/>
+                <Property Name="PCode" Type="Edm.String" MaxLength="20"/>
+                <Property Name="CompanyCode" Type="Edm.String" MaxLength="20"/>
+                <Property Name="Delete" Type="Edm.String" MaxLength="1" DefaultValue=""/>
+                <Property Name="Criticality" Type="Edm.Int32" DefaultValue="0"/>
+                <Property Name="Total_Amount" Type="Edm.Decimal" DefaultValue="0" Scale="variable"/>
+                <NavigationProperty Name="Pl_Master" Type="POApprovalService.PlantMaster">
+                    <ReferentialConstraint Property="PCode" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+                <NavigationProperty Name="Cp_Master" Type="POApprovalService.CompanyMaster">
+                    <ReferentialConstraint Property="CompanyCode" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+                <NavigationProperty Name="S_Master" Type="POApprovalService.StatusMaster">
+                    <ReferentialConstraint Property="Status" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+                <NavigationProperty Name="PO_Item_Master" Type="Collection(POApprovalService.POItem)" Partner="PO_Header_Master">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="PO_Attach_Master" Type="Collection(POApprovalService.PO_Attachment)" Partner="AttachPOHeader">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="PO_Event_Master" Type="Collection(POApprovalService.POEvent)"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="POApprovalService.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="POApprovalService.POHeader"/>
+            </EntityType>
+            <EntityType Name="POItem">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="PO_Number" Type="Edm.Int64"/>
+                <Property Name="PO_Item_Num" Type="Edm.Int32"/>
+                <Property Name="MCode" Type="Edm.String" MaxLength="20"/>
+                <Property Name="Quantity" Type="Edm.Int32"/>
+                <Property Name="Amount" Type="Edm.Decimal" Scale="variable"/>
+                <NavigationProperty Name="M_Master" Type="POApprovalService.Material_Master">
+                    <ReferentialConstraint Property="MCode" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+                <NavigationProperty Name="PO_Header_Master" Type="POApprovalService.POHeader" Partner="PO_Item_Master">
+                    <ReferentialConstraint Property="PO_Header_Master_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="PO_Header_Master_ID" Type="Edm.Guid"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="POApprovalService.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="POApprovalService.POItem"/>
+            </EntityType>
+            <EntityType Name="PlantMaster">
+                <Key>
+                    <PropertyRef Name="CODE"/>
+                </Key>
+                <Property Name="CODE" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="NAME" Type="Edm.String" MaxLength="100"/>
+                <Property Name="CITY" Type="Edm.String" MaxLength="100"/>
+            </EntityType>
+            <EntityType Name="CompanyMaster">
+                <Key>
+                    <PropertyRef Name="CODE"/>
+                </Key>
+                <Property Name="CODE" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="DESC" Type="Edm.String" MaxLength="500"/>
+                <Property Name="WEBSITE" Type="Edm.String" MaxLength="500"/>
+                <Property Name="NAME" Type="Edm.String" MaxLength="500"/>
+            </EntityType>
+            <EntityType Name="POEvent">
+                <Key>
+                    <PropertyRef Name="PO_Number"/>
+                    <PropertyRef Name="EVENT_CODE"/>
+                </Key>
+                <Property Name="PO_Number" Type="Edm.Int64" Nullable="false"/>
+                <Property Name="EVENT_CODE" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="EVENT_DESCRIPTION" Type="Edm.String" MaxLength="100"/>
+                <Property Name="EVENT_DATE" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="EVENT_BY" Type="Edm.String" MaxLength="500"/>
+            </EntityType>
+            <EntityType Name="Material_Master">
+                <Key>
+                    <PropertyRef Name="CODE"/>
+                </Key>
+                <Property Name="CODE" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="DESC" Type="Edm.String" MaxLength="500"/>
+                <Property Name="Plant_Code" Type="Edm.String" MaxLength="20"/>
+                <Property Name="Price" Type="Edm.Double" DefaultValue="0"/>
+                <NavigationProperty Name="Pl_Master" Type="POApprovalService.PlantMaster">
+                    <ReferentialConstraint Property="Plant_Code" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="StatusMaster">
+                <Key>
+                    <PropertyRef Name="CODE"/>
+                </Key>
+                <Property Name="CODE" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="DESC" Type="Edm.String" MaxLength="500"/>
+            </EntityType>
+            <EntityType Name="ApproverMaster">
+                <Key>
+                    <PropertyRef Name="USER_NAME"/>
+                </Key>
+                <Property Name="USER_NAME" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="NAME" Type="Edm.String" MaxLength="100"/>
+                <Property Name="PASSCODE" Type="Edm.String" MaxLength="20"/>
+                <Property Name="LEVEL" Type="Edm.Int32"/>
+            </EntityType>
+            <EntityType Name="PO_Attachment">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="PO_Number" Type="Edm.Int64"/>
+                <Property Name="File_Type" Type="Edm.String"/>
+                <Property Name="File" Type="Edm.Stream"/>
+                <Property Name="FileName" Type="Edm.String"/>
+                <NavigationProperty Name="AttachPOHeader" Type="POApprovalService.POHeader" Partner="PO_Attach_Master">
+                    <ReferentialConstraint Property="AttachPOHeader_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="AttachPOHeader_ID" Type="Edm.Guid"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="POApprovalService.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="POApprovalService.PO_Attachment"/>
+            </EntityType>
+            <EntityType Name="DraftAdministrativeData">
+                <Key>
+                    <PropertyRef Name="DraftUUID"/>
+                </Key>
+                <Property Name="DraftUUID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="CreatedByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="DraftIsCreatedByMe" Type="Edm.Boolean"/>
+                <Property Name="LastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="LastChangedByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="InProcessByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="DraftIsProcessedByMe" Type="Edm.Boolean"/>
+            </EntityType>
+            <Action Name="PurchaseApprove" IsBound="true">
+                <Parameter Name="in" Type="POApprovalService.POHeader"/>
+            </Action>
+            <Action Name="PurchaseReject" IsBound="true">
+                <Parameter Name="in" Type="POApprovalService.POHeader"/>
+            </Action>
+            <Action Name="PurchaseComplete" IsBound="true">
+                <Parameter Name="in" Type="POApprovalService.POHeader"/>
+            </Action>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="POApprovalService.POHeader"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="POApprovalService.POHeader"/>
+            </Action>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="POApprovalService.POItem"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="POApprovalService.POItem"/>
+            </Action>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="POApprovalService.PO_Attachment"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="POApprovalService.PO_Attachment"/>
+            </Action>
+            <Action Name="draftActivate" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="POApprovalService.POHeader"/>
+                <ReturnType Type="POApprovalService.POHeader"/>
+            </Action>
+            <Action Name="draftEdit" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="POApprovalService.POHeader"/>
+                <Parameter Name="PreserveChanges" Type="Edm.Boolean"/>
+                <ReturnType Type="POApprovalService.POHeader"/>
+            </Action>
+            <Action Name="POApprove" IsBound="false">
+                <Parameter Name="input" Type="Edm.String"/>
+                <ReturnType Type="Collection(Edm.String)" Nullable="false"/>
+            </Action>
+            <Action Name="POComplete" IsBound="false">
+                <Parameter Name="input" Type="Edm.String"/>
+                <ReturnType Type="Collection(Edm.String)" Nullable="false"/>
+            </Action>
+            <Action Name="POReject" IsBound="false">
+                <Parameter Name="input" Type="Edm.String"/>
+                <ReturnType Type="Collection(Edm.String)" Nullable="false"/>
+            </Action>
+            <Annotations Target="POApprovalService.EntityContainer/POHeader">
+                <Annotation Term="Common.DraftRoot">
+                    <Record Type="Common.DraftRootType">
+                        <PropertyValue Property="ActivationAction" String="POApprovalService.draftActivate"/>
+                        <PropertyValue Property="EditAction" String="POApprovalService.draftEdit"/>
+                        <PropertyValue Property="PreparationAction" String="POApprovalService.draftPrepare"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="POApprovalService.POHeader/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                </Annotations>
+                <Annotations Target="POApprovalService.POHeader/createdBy">
+                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                    <Annotation Term="Core.Immutable" Bool="true"/>
+                    <Annotation Term="Core.Computed" Bool="true"/>
+                    <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                        </Annotations>
+                        <Annotations Target="POApprovalService.POHeader/modifiedAt">
+                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                            <Annotation Term="Core.Computed" Bool="true"/>
+                            <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                            </Annotations>
+                            <Annotations Target="POApprovalService.POHeader/modifiedBy">
+                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                <Annotation Term="Core.Computed" Bool="true"/>
+                                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                    <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POHeader/PO_Number">
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POHeader/PCode">
+                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POHeader/CompanyCode">
+                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POHeader/IsActiveEntity">
+                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POHeader/HasActiveEntity">
+                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POHeader/HasDraftEntity">
+                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POHeader/DraftAdministrativeData">
+                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.EntityContainer/POItem">
+                                        <Annotation Term="Common.DraftNode">
+                                            <Record Type="Common.DraftNodeType">
+                                                <PropertyValue Property="PreparationAction" String="POApprovalService.draftPrepare"/>
+                                            </Record>
+                                        </Annotation>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POItem/PO_Number">
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POItem/PO_Item_Num">
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POItem/Quantity">
+                                        <Annotation Term="Validation.Minimum" Int="1"/>
+                                        <Annotation Term="Validation.Maximum" Int="100"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POItem/IsActiveEntity">
+                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POItem/HasActiveEntity">
+                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POItem/HasDraftEntity">
+                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POItem/DraftAdministrativeData">
+                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.POEvent/EVENT_DATE">
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.EntityContainer/PO_Attachment">
+                                        <Annotation Term="Common.DraftNode">
+                                            <Record Type="Common.DraftNodeType">
+                                                <PropertyValue Property="PreparationAction" String="POApprovalService.draftPrepare"/>
+                                            </Record>
+                                        </Annotation>
+                                    </Annotations>
+                                    <Annotations Target="POApprovalService.PO_Attachment/createdAt">
+                                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                        <Annotation Term="Core.Immutable" Bool="true"/>
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                                        </Annotations>
+                                        <Annotations Target="POApprovalService.PO_Attachment/createdBy">
+                                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                            <Annotation Term="Core.Immutable" Bool="true"/>
+                                            <Annotation Term="Core.Computed" Bool="true"/>
+                                            <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                                                </Annotations>
+                                                <Annotations Target="POApprovalService.PO_Attachment/modifiedAt">
+                                                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                                    <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                                                    </Annotations>
+                                                    <Annotations Target="POApprovalService.PO_Attachment/modifiedBy">
+                                                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                            <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                                            </Annotations>
+                                                            <Annotations Target="POApprovalService.PO_Attachment/File_Type">
+                                                                <Annotation Term="Core.IsMediaType" Bool="true"/>
+                                                                <Annotation Term="Core.Computed" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="POApprovalService.PO_Attachment/File">
+                                                                <Annotation Term="Core.MediaType" Path="File_Type"/>
+                                                                <Annotation Term="Core.ContentDisposition">
+                                                                    <Record Type="Core.ContentDispositionType">
+                                                                        <PropertyValue Property="Filename" Path="FileName"/>
+                                                                    </Record>
+                                                                </Annotation>
+                                                            </Annotations>
+                                                            <Annotations Target="POApprovalService.PO_Attachment/IsActiveEntity">
+                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="POApprovalService.PO_Attachment/HasActiveEntity">
+                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="POApprovalService.PO_Attachment/HasDraftEntity">
+                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="POApprovalService.PO_Attachment/DraftAdministrativeData">
+                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="POApprovalService.DraftAdministrativeData">
+                                                                <Annotation Term="Common.Label" String="{i18n>Draft_DraftAdministrativeData}"/>
+                                                                </Annotations>
+                                                                <Annotations Target="POApprovalService.DraftAdministrativeData/DraftUUID">
+                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                    <Annotation Term="Common.Label" String="{i18n>Draft_DraftUUID}"/>
+                                                                    </Annotations>
+                                                                    <Annotations Target="POApprovalService.DraftAdministrativeData/CreationDateTime">
+                                                                        <Annotation Term="Common.Label" String="{i18n>Draft_CreationDateTime}"/>
+                                                                        </Annotations>
+                                                                        <Annotations Target="POApprovalService.DraftAdministrativeData/CreatedByUser">
+                                                                            <Annotation Term="Common.Label" String="{i18n>Draft_CreatedByUser}"/>
+                                                                            </Annotations>
+                                                                            <Annotations Target="POApprovalService.DraftAdministrativeData/DraftIsCreatedByMe">
+                                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                <Annotation Term="Common.Label" String="{i18n>Draft_DraftIsCreatedByMe}"/>
+                                                                                </Annotations>
+                                                                                <Annotations Target="POApprovalService.DraftAdministrativeData/LastChangeDateTime">
+                                                                                    <Annotation Term="Common.Label" String="{i18n>Draft_LastChangeDateTime}"/>
+                                                                                    </Annotations>
+                                                                                    <Annotations Target="POApprovalService.DraftAdministrativeData/LastChangedByUser">
+                                                                                        <Annotation Term="Common.Label" String="{i18n>Draft_LastChangedByUser}"/>
+                                                                                        </Annotations>
+                                                                                        <Annotations Target="POApprovalService.DraftAdministrativeData/InProcessByUser">
+                                                                                            <Annotation Term="Common.Label" String="{i18n>Draft_InProcessByUser}"/>
+                                                                                            </Annotations>
+                                                                                            <Annotations Target="POApprovalService.DraftAdministrativeData/DraftIsProcessedByMe">
+                                                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                <Annotation Term="Common.Label" String="{i18n>Draft_DraftIsProcessedByMe}"/>
+                                                                                                </Annotations>
+                                                                                            </Schema>
+                                                                                        </edmx:DataServices>
+                                                                                    </edmx:Edmx>

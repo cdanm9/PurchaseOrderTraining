@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="POCreationService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="POHeader" EntityType="POCreationService.POHeader">
+                    <NavigationPropertyBinding Path="Pl_Master" Target="PlantMaster"/>
+                    <NavigationPropertyBinding Path="Cp_Master" Target="CompanyMaster"/>
+                    <NavigationPropertyBinding Path="S_Master" Target="StatusMaster"/>
+                    <NavigationPropertyBinding Path="PO_Item_Master" Target="POItem"/>
+                    <NavigationPropertyBinding Path="PO_Event_Master" Target="POEvent"/>
+                </EntitySet>
+                <EntitySet Name="POItem" EntityType="POCreationService.POItem">
+                    <NavigationPropertyBinding Path="M_Master" Target="Material_Master"/>
+                </EntitySet>
+                <EntitySet Name="PlantMaster" EntityType="POCreationService.PlantMaster"/>
+                <EntitySet Name="CompanyMaster" EntityType="POCreationService.CompanyMaster"/>
+                <EntitySet Name="POEvent" EntityType="POCreationService.POEvent"/>
+                <EntitySet Name="Material_Master" EntityType="POCreationService.Material_Master">
+                    <NavigationPropertyBinding Path="Pl_Master" Target="PlantMaster"/>
+                </EntitySet>
+                <EntitySet Name="StatusMaster" EntityType="POCreationService.StatusMaster"/>
+                <ActionImport Name="POCreate" Action="POCreationService.POCreate"/>
+            </EntityContainer>
+            <EntityType Name="POHeader">
+                <Key>
+                    <PropertyRef Name="PO_Number"/>
+                </Key>
+                <Property Name="PO_Number" Type="Edm.Int64" Nullable="false"/>
+                <Property Name="CreationDate" Type="Edm.Date"/>
+                <Property Name="DeliveryDate" Type="Edm.Date"/>
+                <Property Name="Status" Type="Edm.Int32"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="20"/>
+                <Property Name="PCode" Type="Edm.String" MaxLength="20"/>
+                <Property Name="CompanyCode" Type="Edm.String" MaxLength="20"/>
+                <Property Name="Delete" Type="Edm.String" MaxLength="1" DefaultValue=""/>
+                <NavigationProperty Name="Pl_Master" Type="POCreationService.PlantMaster">
+                    <ReferentialConstraint Property="PCode" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+                <NavigationProperty Name="Cp_Master" Type="POCreationService.CompanyMaster">
+                    <ReferentialConstraint Property="CompanyCode" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+                <NavigationProperty Name="S_Master" Type="POCreationService.StatusMaster">
+                    <ReferentialConstraint Property="Status" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+                <NavigationProperty Name="PO_Item_Master" Type="Collection(POCreationService.POItem)"/>
+                <NavigationProperty Name="PO_Event_Master" Type="Collection(POCreationService.POEvent)"/>
+            </EntityType>
+            <EntityType Name="POItem">
+                <Key>
+                    <PropertyRef Name="PO_Item_Num"/>
+                    <PropertyRef Name="PO_Number"/>
+                </Key>
+                <Property Name="PO_Item_Num" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="PO_Number" Type="Edm.Int64" Nullable="false"/>
+                <Property Name="MCode" Type="Edm.String" MaxLength="20"/>
+                <Property Name="Quantity" Type="Edm.Int32"/>
+                <Property Name="Amount" Type="Edm.Decimal" Scale="variable"/>
+                <NavigationProperty Name="M_Master" Type="POCreationService.Material_Master">
+                    <ReferentialConstraint Property="MCode" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="PlantMaster">
+                <Key>
+                    <PropertyRef Name="CODE"/>
+                </Key>
+                <Property Name="CODE" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="NAME" Type="Edm.String" MaxLength="100"/>
+                <Property Name="CITY" Type="Edm.String" MaxLength="100"/>
+            </EntityType>
+            <EntityType Name="CompanyMaster">
+                <Key>
+                    <PropertyRef Name="CODE"/>
+                </Key>
+                <Property Name="CODE" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="DESC" Type="Edm.String" MaxLength="500"/>
+                <Property Name="WEBSITE" Type="Edm.String" MaxLength="500"/>
+                <Property Name="NAME" Type="Edm.String" MaxLength="500"/>
+            </EntityType>
+            <EntityType Name="POEvent">
+                <Key>
+                    <PropertyRef Name="PO_Number"/>
+                    <PropertyRef Name="EVENT_CODE"/>
+                </Key>
+                <Property Name="PO_Number" Type="Edm.Int64" Nullable="false"/>
+                <Property Name="EVENT_CODE" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="EVENT_DESCRIPTION" Type="Edm.String" MaxLength="100"/>
+                <Property Name="EVENT_DATE" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="EVENT_BY" Type="Edm.String" MaxLength="500"/>
+            </EntityType>
+            <EntityType Name="Material_Master">
+                <Key>
+                    <PropertyRef Name="CODE"/>
+                </Key>
+                <Property Name="CODE" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="DESC" Type="Edm.String" MaxLength="500"/>
+                <Property Name="Plant_Code" Type="Edm.String" MaxLength="20"/>
+                <Property Name="Price" Type="Edm.Double" DefaultValue="0"/>
+                <NavigationProperty Name="Pl_Master" Type="POCreationService.PlantMaster">
+                    <ReferentialConstraint Property="Plant_Code" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="StatusMaster">
+                <Key>
+                    <PropertyRef Name="CODE"/>
+                </Key>
+                <Property Name="CODE" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="DESC" Type="Edm.String" MaxLength="500"/>
+            </EntityType>
+            <ComplexType Name="PRCreatePayload">
+                <Property Name="PO_Header" Type="POCreationService.PRCreatePayload_PO_Header"/>
+                <Property Name="PO_Item" Type="Collection(POCreationService.PRCreatePayload_PO_Item)" Nullable="false"/>
+                <Property Name="PO_Event" Type="POCreationService.PRCreatePayload_PO_Event"/>
+            </ComplexType>
+            <ComplexType Name="PRCreatePayload_PO_Header">
+                <Property Name="PO_Number" Type="Edm.Int64"/>
+                <Property Name="CreationDate" Type="Edm.Date"/>
+                <Property Name="DeliveryDate" Type="Edm.Date"/>
+                <Property Name="Status" Type="Edm.String" MaxLength="20"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="20"/>
+                <Property Name="PCode" Type="Edm.String" MaxLength="20"/>
+                <Property Name="CompanyCode" Type="Edm.String" MaxLength="20"/>
+            </ComplexType>
+            <ComplexType Name="PRCreatePayload_PO_Item">
+                <Property Name="PO_Item_Num" Type="Edm.Int32"/>
+                <Property Name="PO_Number" Type="Edm.Int64"/>
+                <Property Name="MCode" Type="Edm.String" MaxLength="20"/>
+                <Property Name="Quantity" Type="Edm.Int32"/>
+                <Property Name="Amount" Type="Edm.Decimal" Scale="variable"/>
+            </ComplexType>
+            <ComplexType Name="PRCreatePayload_PO_Event">
+                <Property Name="PO_Number" Type="Edm.Int32"/>
+                <Property Name="EVENT_CODE" Type="Edm.Int32"/>
+                <Property Name="EVENT_DESCRIPTION" Type="Edm.String" MaxLength="100"/>
+                <Property Name="EVENT_DATE" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="EVENT_BY" Type="Edm.String" MaxLength="500"/>
+            </ComplexType>
+            <Action Name="POCreate" IsBound="false">
+                <Parameter Name="input" Type="Edm.String"/>
+                <ReturnType Type="Collection(Edm.String)" Nullable="false"/>
+            </Action>
+            <Annotations Target="POCreationService.POHeader">
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="TypeName" String="Purchase Header"/>
+                        <PropertyValue Property="TypeNamePlural" String="Purchase Order"/>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="PO_Number"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="CreatedBy"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>PO_Number</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PO_Number"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PCode"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="CompanyCode"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="CreationDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="DeliveryDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Status"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="CreatedBy"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="PO Header"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Main"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="PO Items"/>
+                            <PropertyValue Property="Target" AnnotationPath="PO_Item_Master/@UI.LineItem"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.FieldGroup" Qualifier="Main">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="PCode"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="CompanyCode"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="DeliveryDate"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="CreatedBy"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="POCreationService.POHeader/CreationDate">
+                <Annotation Term="Common.Label" String="Creation Date"/>
+            </Annotations>
+            <Annotations Target="POCreationService.POHeader/DeliveryDate">
+                <Annotation Term="Common.Label" String="Delivery Date"/>
+            </Annotations>
+            <Annotations Target="POCreationService.POHeader/Status">
+                <Annotation Term="Common.Label" String="Status"/>
+            </Annotations>
+            <Annotations Target="POCreationService.POHeader/CreatedBy">
+                <Annotation Term="Common.Label" String="Created By"/>
+            </Annotations>
+            <Annotations Target="POCreationService.POHeader/PCode">
+                <Annotation Term="Common.Label" String="Plant Code"/>
+            </Annotations>
+            <Annotations Target="POCreationService.POHeader/CompanyCode">
+                <Annotation Term="Common.Label" String="Company Code"/>
+            </Annotations>
+            <Annotations Target="POCreationService.POHeader/Delete">
+                <Annotation Term="Common.Label" String="Delete"/>
+            </Annotations>
+            <Annotations Target="POCreationService.POHeader/PO_Item_Master">
+                <Annotation Term="Common.Label" String="Purchase Order Items"/>
+            </Annotations>
+            <Annotations Target="POCreationService.POItem">
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PO_Item_Num"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PO_Number"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MCode"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Quantity"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Amount"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="POCreationService.POItem/PO_Item_Num">
+                <Annotation Term="Common.Label" String="PO Item Number"/>
+            </Annotations>
+            <Annotations Target="POCreationService.POItem/PO_Number">
+                <Annotation Term="Common.Label" String="PO Number"/>
+            </Annotations>
+            <Annotations Target="POCreationService.POItem/MCode">
+                <Annotation Term="Common.Label" String="Material Code"/>
+            </Annotations>
+            <Annotations Target="POCreationService.POItem/Quantity">
+                <Annotation Term="Common.Label" String="Quantity"/>
+            </Annotations>
+            <Annotations Target="POCreationService.POItem/Amount">
+                <Annotation Term="Common.Label" String="Amount"/>
+            </Annotations>
+            <Annotations Target="POCreationService.POEvent/EVENT_DATE">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

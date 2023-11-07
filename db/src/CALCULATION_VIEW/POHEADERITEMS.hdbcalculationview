@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="POHEADERITEMS" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="POHEADERITEMS"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CAPM_TABLE_PO_HEADER">
+    <resourceUri>CAPM_TABLE_PO_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="CAPM_TABLE_PO_ITEM">
+    <resourceUri>CAPM_TABLE_PO_ITEM</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="PO_NUMBER"/>
+      <viewAttribute id="CREATIONDATE"/>
+      <viewAttribute id="DELIVERYDATE"/>
+      <viewAttribute id="STATUS"/>
+      <viewAttribute id="CREATEDBY"/>
+      <viewAttribute id="PCODE"/>
+      <viewAttribute id="COMPANYCODE"/>
+      <viewAttribute id="DELETE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CAPM_TABLE_PO_HEADER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="PO_ITEM_NUM"/>
+      <viewAttribute id="PO_NUMBER"/>
+      <viewAttribute id="MCODE"/>
+      <viewAttribute id="QUANTITY"/>
+      <viewAttribute id="AMOUNT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CAPM_TABLE_PO_ITEM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="PO_NUMBER" aggregationType="sum"/>
+      <viewAttribute id="CREATIONDATE"/>
+      <viewAttribute id="DELIVERYDATE"/>
+      <viewAttribute id="STATUS" aggregationType="sum"/>
+      <viewAttribute id="CREATEDBY"/>
+      <viewAttribute id="PO_ITEM_NUM" aggregationType="sum"/>
+      <viewAttribute id="QUANTITY" aggregationType="sum"/>
+      <viewAttribute id="AMOUNT" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$PO_NUMBER$PO_NUMBER"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_NUMBER" source="PO_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATIONDATE" source="CREATIONDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DELIVERYDATE" source="DELIVERYDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY" source="CREATEDBY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PO_NUMBER$PO_NUMBER" source="PO_NUMBER"/>
+    </input>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_ITEM_NUM" source="PO_ITEM_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QUANTITY" source="QUANTITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT" source="AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PO_NUMBER$PO_NUMBER" source="PO_NUMBER"/>
+    </input>
+    <joinAttribute name="JOIN$PO_NUMBER$PO_NUMBER"/>
+  </calculationView>
+</calculationViews>
+
+<logicalModel id="Join_1">
+  <attributes>
+    <attribute id="PO_NUMBER" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PO_NUMBER"/>
+      <keyMapping columnObjectName="Join_1" columnName="PO_NUMBER"/>
+    </attribute>
+    <attribute id="CREATIONDATE" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CREATIONDATE"/>
+      <keyMapping columnObjectName="Join_1" columnName="CREATIONDATE"/>
+    </attribute>
+    <attribute id="DELIVERYDATE" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DELIVERYDATE"/>
+      <keyMapping columnObjectName="Join_1" columnName="DELIVERYDATE"/>
+    </attribute>
+    <attribute id="CREATEDBY" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CREATEDBY"/>
+      <keyMapping columnObjectName="Join_1" columnName="CREATEDBY"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="STATUS" order="4" aggregationType="max" measureType="simple" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="STATUS"/>
+      <measureMapping columnObjectName="Join_1" columnName="STATUS"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="PO_ITEM_NUM" order="6" aggregationType="count" measureType="simple" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="PO_ITEM_NUM"/>
+      <measureMapping columnObjectName="Join_1" columnName="PO_ITEM_NUM"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="QUANTITY" order="7" aggregationType="max" measureType="simple" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="QUANTITY"/>
+      <measureMapping columnObjectName="Join_1" columnName="QUANTITY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="AMOUNT" order="8" aggregationType="max" measureType="simple" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="AMOUNT"/>
+      <measureMapping columnObjectName="Join_1" columnName="AMOUNT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-14" y="320"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="222" y="320"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="105" y="179"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
