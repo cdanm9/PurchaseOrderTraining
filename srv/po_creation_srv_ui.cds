@@ -69,10 +69,10 @@ annotate POCreationService.POItem with @(
     UI: {
         LineItem: [
             {Value: PO_Item_Num},
-            {Value: PO_Number},
             {Value: MCode},
             {Value: Quantity},
-            {Value: Amount}
+            {Value: Amount},
+            {Value:M_Master.Material_Image,},
         ]
     }
 ){};

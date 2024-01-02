@@ -13,7 +13,7 @@ module.exports=cds.service.impl(function(srv){
             var iPONumber,sMessage;
             var oPayload=JSON.parse(req.data.input)
             var oPOHeader=oPayload.PO_Header;
-            var oPOItem=oPayload.PO_Item;
+            var oPOItem=oPayload.PO_Item;   
             var oPOEvent=oPayload.PO_Event;
             let aPO_Number= await SELECT .from('CAPM_TABLE_PO_HEADER',['Max(PO_Number) as PO_Number']); 
             if(aPO_Number[0].PO_Number==null){

@@ -17,7 +17,12 @@ context capm.mastertable{
     DESC: String(500);
     Plant_Code: String(20);
     Price:Double default 0.0;
-    Pl_Master: Association to Plant_Master on Pl_Master.CODE=Plant_Code;         
+    Material_Image:String @UI : {IsImageURL : true};    
+    Pl_Master: Association to Plant_Master on Pl_Master.CODE=Plant_Code;  
+    Phone: String(20) @Communication.IsPhoneNumber;
+    Fax:String(20);
+    Email      : String(240) @Communication.IsEmailAddress; 
+    LandLine: String(20);                
   }
 
   entity Status_Master{

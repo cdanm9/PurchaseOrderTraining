@@ -1,0 +1,17 @@
+TYPE "ST_PO_HEADER" AS TABLE ( 
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  ID NVARCHAR(36),
+  PO_Number BIGINT,
+  CreationDate DATE,
+  DeliveryDate DATE,
+  Status INTEGER,
+  MadeBy NVARCHAR(20),
+  PCode NVARCHAR(20),
+  CompanyCode NVARCHAR(20),
+  Delete NVARCHAR(1),
+  Criticality INTEGER,
+  Total_Amount DECIMAL
+)

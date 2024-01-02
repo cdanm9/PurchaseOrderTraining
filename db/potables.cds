@@ -28,9 +28,10 @@ context capm.table{
     @readonly PO_Number: Integer64 not null;
     @readonly PO_Item_Num:Integer not null; 
     MCode: String(20);    
-    Quantity: Integer @assert.range:[1,100];
+    Quantity: Integer @assert.range:[1,100];          
     Amount: Decimal; 
     M_Master: Association to masters.Material_Master on M_Master.CODE=MCode;   
+          
     PO_Header_Master: Association to PO_Header;    
   }    
   
@@ -60,7 +61,20 @@ context capm.table{
     size: Integer;
     url: String;
   }
-      
+
+  entity PO_Extra_Header: managed,cuid{
+        // key POH_Unique: UUID; 
+        @readonly @mandatory PO_Number: Integer64 not null; 
+        CreationDate: Date;
+        DeliveryDate: Date;
+        Status: Integer; 
+        MadeBy: String(20) default 'CDAN';    
+        @mandatory PCode: String(20); 
+        @mandatory CompanyCode: String(20); 
+        Delete: String(1) default '';
+        Criticality: Integer default 0;    
+        Total_Amount: Decimal default 0;           
+  };       
 }
 
 @cds.persistence.exists 

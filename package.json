@@ -1,0 +1,49 @@
+{
+  "name": "PurchaseOrder",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^6.8.4",
+    "@sap/cds-hana": "^2",
+    "@sap/cds-odata-v2-adapter-proxy": "^1.9.21",
+    "@sap/hana-client": "^2.17.22",
+    "@sap/hdbext": "^7.7.5",
+    "@sap/xssec": "^3",
+    "express": "^4.18.2",
+    "hdb": "^0.19.5",
+    "passport": "^0",
+    "sap-hdbext-promisfied": "^2.202306.2"
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^7",
+    "@sap/hdi-deploy": "4.8.2",
+    "@sap/ux-specification": "^1.120.1",
+    "rimraf": "^3.0.2"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch-poview": "cds watch --open poview/webapp/index.html?sap-ui-xx-viewCache=false",
+    "undeploy": "cf undeploy PurchaseOrder --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "watch-overview_capm": "cds watch --open overview_capm/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-prcdashboard": "cds watch --open prcdashboard/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-project1": "cds watch --open project1/webapp/index.html?sap-ui-xx-viewCache=false"
+  },
+  "cds": {
+    "requires": {
+      "db": "hana"
+    },
+    "hana": {
+      "deploy-format": "hdbtable"
+    }
+  },
+  "sapux": [
+    "app/overview_capm",
+    "app/prcdashboard",
+    "app/project1"
+  ]
+}
