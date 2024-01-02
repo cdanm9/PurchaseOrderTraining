@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+        <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+        <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="PO_OverviewService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="POHeader" EntityType="PO_OverviewService.POHeader">
+                    <NavigationPropertyBinding Path="Pl_Master" Target="PlantMaster"/>
+                    <NavigationPropertyBinding Path="Cp_Master" Target="CompanyMaster"/>
+                    <NavigationPropertyBinding Path="S_Master" Target="StatusMaster"/>
+                    <NavigationPropertyBinding Path="PO_Item_Master" Target="POItem"/>
+                    <NavigationPropertyBinding Path="PO_Attach_Master" Target="PO_Attachment"/>
+                    <NavigationPropertyBinding Path="PO_Event_Master" Target="POEvent"/>
+                </EntitySet>
+                <EntitySet Name="POItem" EntityType="PO_OverviewService.POItem">
+                    <NavigationPropertyBinding Path="M_Master" Target="Material_Master"/>
+                    <NavigationPropertyBinding Path="PO_Header_Master" Target="POHeader"/>
+                </EntitySet>
+                <EntitySet Name="PlantMaster" EntityType="PO_OverviewService.PlantMaster"/>
+                <EntitySet Name="CompanyMaster" EntityType="PO_OverviewService.CompanyMaster"/>
+                <EntitySet Name="POEvent" EntityType="PO_OverviewService.POEvent"/>
+                <EntitySet Name="Material_Master" EntityType="PO_OverviewService.Material_Master">
+                    <NavigationPropertyBinding Path="Pl_Master" Target="PlantMaster"/>
+                </EntitySet>
+                <EntitySet Name="StatusMaster" EntityType="PO_OverviewService.StatusMaster"/>
+                <EntitySet Name="POStarReport" EntityType="PO_OverviewService.POStarReport"/>
+                <EntitySet Name="PO_Header_Items" EntityType="PO_OverviewService.PO_Header_Items"/>
+                <EntitySet Name="Purchase_Report" EntityType="PO_OverviewService.Purchase_Report"/>
+                <EntitySet Name="PO_Attachment" EntityType="PO_OverviewService.PO_Attachment">
+                    <NavigationPropertyBinding Path="AttachPOHeader" Target="POHeader"/>
+                </EntitySet>
+                <FunctionImport Name="POCancelled" Function="PO_OverviewService.POCancelled"/>
+            </EntityContainer>
+            <EntityType Name="POHeader">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="PO_Number" Type="Edm.Int64" Nullable="false"/>
+                <Property Name="CreationDate" Type="Edm.Date"/>
+                <Property Name="DeliveryDate" Type="Edm.Date"/>
+                <Property Name="Status" Type="Edm.Int32"/>
+                <Property Name="MadeBy" Type="Edm.String" MaxLength="20" DefaultValue="CDAN"/>
+                <Property Name="PCode" Type="Edm.String" MaxLength="20"/>
+                <Property Name="CompanyCode" Type="Edm.String" MaxLength="20"/>
+                <Property Name="Delete" Type="Edm.String" MaxLength="1" DefaultValue=""/>
+                <Property Name="Criticality" Type="Edm.Int32" DefaultValue="0"/>
+                <Property Name="Total_Amount" Type="Edm.Decimal" DefaultValue="0" Scale="variable"/>
+                <NavigationProperty Name="Pl_Master" Type="PO_OverviewService.PlantMaster">
+                    <ReferentialConstraint Property="PCode" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+                <NavigationProperty Name="Cp_Master" Type="PO_OverviewService.CompanyMaster">
+                    <ReferentialConstraint Property="CompanyCode" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+                <NavigationProperty Name="S_Master" Type="PO_OverviewService.StatusMaster">
+                    <ReferentialConstraint Property="Status" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+                <NavigationProperty Name="PO_Item_Master" Type="Collection(PO_OverviewService.POItem)" Partner="PO_Header_Master">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="PO_Attach_Master" Type="Collection(PO_OverviewService.PO_Attachment)" Partner="AttachPOHeader">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="PO_Event_Master" Type="Collection(PO_OverviewService.POEvent)"/>
+            </EntityType>
+            <EntityType Name="POItem">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="PO_Number" Type="Edm.Int64" Nullable="false"/>
+                <Property Name="PO_Item_Num" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="MCode" Type="Edm.String" MaxLength="20"/>
+                <Property Name="Quantity" Type="Edm.Int32"/>
+                <Property Name="Amount" Type="Edm.Decimal" Scale="variable"/>
+                <NavigationProperty Name="M_Master" Type="PO_OverviewService.Material_Master">
+                    <ReferentialConstraint Property="MCode" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+                <NavigationProperty Name="PO_Header_Master" Type="PO_OverviewService.POHeader" Partner="PO_Item_Master">
+                    <ReferentialConstraint Property="PO_Header_Master_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="PO_Header_Master_ID" Type="Edm.Guid"/>
+            </EntityType>
+            <EntityType Name="PlantMaster">
+                <Key>
+                    <PropertyRef Name="CODE"/>
+                </Key>
+                <Property Name="CODE" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="NAME" Type="Edm.String" MaxLength="100"/>
+                <Property Name="CITY" Type="Edm.String" MaxLength="100"/>
+            </EntityType>
+            <EntityType Name="CompanyMaster">
+                <Key>
+                    <PropertyRef Name="CODE"/>
+                </Key>
+                <Property Name="CODE" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="DESC" Type="Edm.String" MaxLength="500"/>
+                <Property Name="WEBSITE" Type="Edm.String" MaxLength="500"/>
+                <Property Name="NAME" Type="Edm.String" MaxLength="500"/>
+            </EntityType>
+            <EntityType Name="POEvent">
+                <Key>
+                    <PropertyRef Name="PO_Number"/>
+                    <PropertyRef Name="EVENT_CODE"/>
+                </Key>
+                <Property Name="PO_Number" Type="Edm.Int64" Nullable="false"/>
+                <Property Name="EVENT_CODE" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="EVENT_DESCRIPTION" Type="Edm.String" MaxLength="100"/>
+                <Property Name="EVENT_DATE" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="EVENT_BY" Type="Edm.String" MaxLength="500"/>
+            </EntityType>
+            <EntityType Name="Material_Master">
+                <Key>
+                    <PropertyRef Name="CODE"/>
+                </Key>
+                <Property Name="CODE" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="DESC" Type="Edm.String" MaxLength="500"/>
+                <Property Name="Plant_Code" Type="Edm.String" MaxLength="20"/>
+                <Property Name="Price" Type="Edm.Double" DefaultValue="0"/>
+                <Property Name="Material_Image" Type="Edm.String"/>
+                <NavigationProperty Name="Pl_Master" Type="PO_OverviewService.PlantMaster">
+                    <ReferentialConstraint Property="Plant_Code" ReferencedProperty="CODE"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="StatusMaster">
+                <Key>
+                    <PropertyRef Name="CODE"/>
+                </Key>
+                <Property Name="CODE" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="DESC" Type="Edm.String" MaxLength="500"/>
+            </EntityType>
+            <EntityType Name="POStarReport">
+                <Key>
+                    <PropertyRef Name="PLCODE"/>
+                    <PropertyRef Name="CCODE"/>
+                    <PropertyRef Name="SCODE"/>
+                    <PropertyRef Name="MRCODE"/>
+                    <PropertyRef Name="CREATEDBY"/>
+                    <PropertyRef Name="CREATIONDATE"/>
+                    <PropertyRef Name="DELIVERYDATE"/>
+                    <PropertyRef Name="MADEBY"/>
+                    <PropertyRef Name="DELETE"/>
+                    <PropertyRef Name="PO_ITEM_NUM"/>
+                    <PropertyRef Name="QUANTITY"/>
+                    <PropertyRef Name="AMOUNT"/>
+                </Key>
+                <Property Name="PLCODE" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="PLANT" Type="Edm.String" MaxLength="100"/>
+                <Property Name="PCITY" Type="Edm.String" MaxLength="100"/>
+                <Property Name="CCODE" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="CDESC" Type="Edm.String" MaxLength="500"/>
+                <Property Name="CWEB" Type="Edm.String" MaxLength="500"/>
+                <Property Name="COMPANY" Type="Edm.String" MaxLength="500"/>
+                <Property Name="SCODE" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="STATUS" Type="Edm.String" MaxLength="500"/>
+                <Property Name="MRCODE" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="MDESC" Type="Edm.String" MaxLength="500"/>
+                <Property Name="PLANT_CODE" Type="Edm.String" MaxLength="20"/>
+                <Property Name="MPRICE" Type="Edm.Double"/>
+                <Property Name="CREATEDBY" Type="Edm.String" MaxLength="255" Nullable="false"/>
+                <Property Name="MODIFIEDAT" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="PO_NUMBER" Type="Edm.Int64"/>
+                <Property Name="CREATIONDATE" Type="Edm.Date" Nullable="false"/>
+                <Property Name="DELIVERYDATE" Type="Edm.Date" Nullable="false"/>
+                <Property Name="MADEBY" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="DELETE" Type="Edm.String" MaxLength="1" Nullable="false"/>
+                <Property Name="TOTAL_AMOUNT" Type="Edm.Decimal" Precision="34"/>
+                <Property Name="PO_ITEM_NUM" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="QUANTITY" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="AMOUNT" Type="Edm.Decimal" Precision="34" Nullable="false"/>
+            </EntityType>
+            <EntityType Name="PO_Header_Items">
+                <Key>
+                    <PropertyRef Name="CREATIONDATE"/>
+                    <PropertyRef Name="DELIVERYDATE"/>
+                    <PropertyRef Name="CREATEDBY"/>
+                </Key>
+                <Property Name="PO_NUMBER" Type="Edm.Int64"/>
+                <Property Name="CREATIONDATE" Type="Edm.Date" Nullable="false"/>
+                <Property Name="DELIVERYDATE" Type="Edm.Date" Nullable="false"/>
+                <Property Name="STATUS" Type="Edm.Int32"/>
+                <Property Name="CREATEDBY" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="PO_ITEM_NUM" Type="Edm.Int32"/>
+                <Property Name="QUANTITY" Type="Edm.Int32"/>
+                <Property Name="AMOUNT" Type="Edm.Decimal" Precision="34"/>
+            </EntityType>
+            <EntityType Name="Purchase_Report">
+                <Property Name="PO_Number" Type="Edm.Int64" Nullable="false"/>
+                <Property Name="PCode" Type="Edm.String" MaxLength="20"/>
+                <Property Name="Quantity" Type="Edm.Int32"/>
+                <Property Name="MCode" Type="Edm.String" MaxLength="20"/>
+                <Property Name="Amount" Type="Edm.Decimal" Scale="variable"/>
+            </EntityType>
+            <EntityType Name="PO_Attachment">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="PO_Number" Type="Edm.Int64"/>
+                <Property Name="File_Type" Type="Edm.String"/>
+                <Property Name="File" Type="Edm.Stream"/>
+                <Property Name="FileName" Type="Edm.String"/>
+                <NavigationProperty Name="AttachPOHeader" Type="PO_OverviewService.POHeader" Partner="PO_Attach_Master">
+                    <ReferentialConstraint Property="AttachPOHeader_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="AttachPOHeader_ID" Type="Edm.Guid"/>
+            </EntityType>
+            <ComplexType Name="oPOHeader">
+                <Property Name="PO_NUMBER" Type="Edm.Int64"/>
+                <Property Name="CREATIONDATE" Type="Edm.Date"/>
+                <Property Name="DELIVERYDATE" Type="Edm.Date"/>
+                <Property Name="STATUS" Type="Edm.Int32"/>
+                <Property Name="MADEBY" Type="Edm.String" MaxLength="20"/>
+                <Property Name="PCODE" Type="Edm.String" MaxLength="20"/>
+                <Property Name="COMPANYCODE" Type="Edm.String" MaxLength="20"/>
+                <Property Name="DELETE" Type="Edm.String" MaxLength="1"/>
+            </ComplexType>
+            <Function Name="POCancelled" IsBound="false" IsComposable="false">
+                <ReturnType Type="Collection(PO_OverviewService.oPOHeader)" Nullable="false"/>
+            </Function>
+            <Annotations Target="PO_OverviewService.POHeader/createdAt">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                </Annotations>
+                <Annotations Target="PO_OverviewService.POHeader/createdBy">
+                    <Annotation Term="UI.Hidden" Bool="true"/>
+                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                    <Annotation Term="Core.Immutable" Bool="true"/>
+                    <Annotation Term="Core.Computed" Bool="true"/>
+                    <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                        </Annotations>
+                        <Annotations Target="PO_OverviewService.POHeader/modifiedAt">
+                            <Annotation Term="UI.Hidden" Bool="true"/>
+                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                            <Annotation Term="Core.Computed" Bool="true"/>
+                            <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                            </Annotations>
+                            <Annotations Target="PO_OverviewService.POHeader/modifiedBy">
+                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                <Annotation Term="Core.Computed" Bool="true"/>
+                                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                    <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POHeader/PO_Number">
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POHeader/PCode">
+                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POHeader/CompanyCode">
+                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POItem">
+                                        <Annotation Term="UI.Chart" Qualifier="donut">
+                                            <Record Type="UI.ChartDefinitionType">
+                                                <PropertyValue Property="ChartType" EnumMember="UI.ChartType/Donut"/>
+                                                <PropertyValue Property="Description" String="Donut Chart"/>
+                                                <PropertyValue Property="Measures">
+                                                    <Collection>
+                                                        <PropertyPath>Amount</PropertyPath>
+                                                    </Collection>
+                                                </PropertyValue>
+                                                <PropertyValue Property="MeasureAttributes">
+                                                    <Collection>
+                                                        <Record Type="UI.ChartMeasureAttributeType">
+                                                            <PropertyValue Property="Measure" PropertyPath="Amount"/>
+                                                            <PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1"/>
+                                                            <PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#Amount"/>
+                                                        </Record>
+                                                    </Collection>
+                                                </PropertyValue>
+                                                <PropertyValue Property="Dimensions">
+                                                    <Collection>
+                                                        <PropertyPath>MCode</PropertyPath>
+                                                    </Collection>
+                                                </PropertyValue>
+                                                <PropertyValue Property="DimensionAttributes">
+                                                    <Collection>
+                                                        <Record Type="UI.ChartDimensionAttributeType">
+                                                            <PropertyValue Property="Dimension" PropertyPath="MCode"/>
+                                                            <PropertyValue Property="Role" EnumMember="UI.ChartDimensionRoleType/Category"/>
+                                                        </Record>
+                                                    </Collection>
+                                                </PropertyValue>
+                                            </Record>
+                                        </Annotation>
+                                        <Annotation Term="UI.PresentationVariant" Qualifier="donutPreVar">
+                                            <Record Type="UI.PresentationVariantType">
+                                                <PropertyValue Property="Visualizations">
+                                                    <Collection>
+                                                        <AnnotationPath>@UI.Chart#donut</AnnotationPath>
+                                                    </Collection>
+                                                </PropertyValue>
+                                                <PropertyValue Property="MaxItems" Int="3"/>
+                                                <PropertyValue Property="IncludeGrandTotal" Bool="true"/>
+                                                <PropertyValue Property="SortOrder">
+                                                    <Collection>
+                                                        <Record Type="Common.SortOrderType">
+                                                            <PropertyValue Property="Descending" Bool="true"/>
+                                                            <PropertyValue Property="Property" PropertyPath="Amount"/>
+                                                        </Record>
+                                                    </Collection>
+                                                </PropertyValue>
+                                            </Record>
+                                        </Annotation>
+                                        <Annotation Term="UI.DataPoint" Qualifier="Amount">
+                                            <Record Type="UI.DataPointType">
+                                                <PropertyValue Property="Value" Path="Amount"/>
+                                                <PropertyValue Property="Title" String="Amount"/>
+                                                <PropertyValue Property="CriticalityCalculation">
+                                                    <Record Type="UI.CriticalityCalculationType">
+                                                        <PropertyValue Property="ImprovementDirection" EnumMember="UI.ImprovementDirectionType/Maximize"/>
+                                                        <PropertyValue Property="DeviationRangeHighValue" Int="1000000"/>
+                                                        <PropertyValue Property="DeviationRangeLowValue" Int="3000000"/>
+                                                    </Record>
+                                                </PropertyValue>
+                                                <PropertyValue Property="TrendCalculation">
+                                                    <Record Type="UI.TrendCalculationType">
+                                                        <PropertyValue Property="ReferenceValue" Int="1000"/>
+                                                        <PropertyValue Property="UpDifference" Decimal="10"/>
+                                                        <PropertyValue Property="StrongUpDifference" Decimal="100"/>
+                                                        <PropertyValue Property="DownDifference" Decimal="-10"/>
+                                                        <PropertyValue Property="StrongDownDifference" Decimal="-100"/>
+                                                    </Record>
+                                                </PropertyValue>
+                                            </Record>
+                                        </Annotation>
+                                        <Annotation Term="UI.Identification">
+                                            <Collection>
+                                                <Record Type="UI.DataField">
+                                                    <PropertyValue Property="Value" Path="Amount"/>
+                                                </Record>
+                                            </Collection>
+                                        </Annotation>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.EntityContainer/POItem">
+                                        <Annotation Term="UI.PresentationVariant" Qualifier="donutPreVar">
+                                            <Record Type="UI.PresentationVariantType">
+                                                <PropertyValue Property="Visualizations">
+                                                    <Collection>
+                                                        <AnnotationPath>@UI.Chart#donut</AnnotationPath>
+                                                    </Collection>
+                                                </PropertyValue>
+                                                <PropertyValue Property="MaxItems" Int="3"/>
+                                                <PropertyValue Property="IncludeGrandTotal" Bool="true"/>
+                                                <PropertyValue Property="SortOrder">
+                                                    <Collection>
+                                                        <Record Type="Common.SortOrderType">
+                                                            <PropertyValue Property="Descending" Bool="true"/>
+                                                            <PropertyValue Property="Property" PropertyPath="Amount"/>
+                                                        </Record>
+                                                    </Collection>
+                                                </PropertyValue>
+                                            </Record>
+                                        </Annotation>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POItem/PO_Number">
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POItem/PO_Item_Num">
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POItem/Quantity">
+                                        <Annotation Term="Validation.Minimum" Int="1"/>
+                                        <Annotation Term="Validation.Maximum" Int="100"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POEvent/EVENT_DATE">
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.Material_Master/Material_Image">
+                                        <Annotation Term="UI.IsImageURL" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.EntityContainer/POStarReport">
+                                        <Annotation Term="Capabilities.DeleteRestrictions">
+                                            <Record Type="Capabilities.DeleteRestrictionsType">
+                                                <PropertyValue Property="Deletable" Bool="false"/>
+                                            </Record>
+                                        </Annotation>
+                                        <Annotation Term="Capabilities.InsertRestrictions">
+                                            <Record Type="Capabilities.InsertRestrictionsType">
+                                                <PropertyValue Property="Insertable" Bool="false"/>
+                                            </Record>
+                                        </Annotation>
+                                        <Annotation Term="Capabilities.UpdateRestrictions">
+                                            <Record Type="Capabilities.UpdateRestrictionsType">
+                                                <PropertyValue Property="Updatable" Bool="false"/>
+                                            </Record>
+                                        </Annotation>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/PLCODE">
+                                        <Annotation Term="Common.Label" String="Plant Code"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/PLANT">
+                                        <Annotation Term="Common.Label" String="Plant"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/PCITY">
+                                        <Annotation Term="Common.Label" String="Plant City"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/CCODE">
+                                        <Annotation Term="Common.Label" String="Company Code"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/CDESC">
+                                        <Annotation Term="Common.Label" String="Company Description"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/CWEB">
+                                        <Annotation Term="Common.Label" String="Company Website"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/COMPANY">
+                                        <Annotation Term="Common.Label" String="Company"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/SCODE">
+                                        <Annotation Term="Common.Label" String="Status Code"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/STATUS">
+                                        <Annotation Term="Common.Label" String="Status"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/MRCODE">
+                                        <Annotation Term="Common.Label" String="Material Code"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/MDESC">
+                                        <Annotation Term="Common.Label" String="Material"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/PLANT_CODE">
+                                        <Annotation Term="Common.Label" String="Material Plant Code"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/MPRICE">
+                                        <Annotation Term="Common.Label" String="Material Price"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/CREATEDBY">
+                                        <Annotation Term="Common.Label" String="Created By"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/MODIFIEDAT">
+                                        <Annotation Term="Common.Label" String="Modified By"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/PO_NUMBER">
+                                        <Annotation Term="Common.Label" String="PO Number"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/CREATIONDATE">
+                                        <Annotation Term="Common.Label" String="Creation Date"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/DELIVERYDATE">
+                                        <Annotation Term="Common.Label" String="Delivery Date"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/MADEBY">
+                                        <Annotation Term="Common.Label" String="Made By"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/DELETE">
+                                        <Annotation Term="Common.Label" String="Delete"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/TOTAL_AMOUNT">
+                                        <Annotation Term="Common.Label" String="Total Amount"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/PO_ITEM_NUM">
+                                        <Annotation Term="Common.Label" String="PO Item Number"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/QUANTITY">
+                                        <Annotation Term="Common.Label" String="Quantity"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.POStarReport/AMOUNT">
+                                        <Annotation Term="Common.Label" String="Amount"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.EntityContainer/PO_Header_Items">
+                                        <Annotation Term="Capabilities.DeleteRestrictions">
+                                            <Record Type="Capabilities.DeleteRestrictionsType">
+                                                <PropertyValue Property="Deletable" Bool="false"/>
+                                            </Record>
+                                        </Annotation>
+                                        <Annotation Term="Capabilities.InsertRestrictions">
+                                            <Record Type="Capabilities.InsertRestrictionsType">
+                                                <PropertyValue Property="Insertable" Bool="false"/>
+                                            </Record>
+                                        </Annotation>
+                                        <Annotation Term="Capabilities.UpdateRestrictions">
+                                            <Record Type="Capabilities.UpdateRestrictionsType">
+                                                <PropertyValue Property="Updatable" Bool="false"/>
+                                            </Record>
+                                        </Annotation>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.PO_Header_Items/PO_NUMBER">
+                                        <Annotation Term="Common.Label" String="PO_NUMBER: PO_NUMBER"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.PO_Header_Items/CREATIONDATE">
+                                        <Annotation Term="Common.Label" String="CREATIONDATE: CREATIONDATE"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.PO_Header_Items/DELIVERYDATE">
+                                        <Annotation Term="Common.Label" String="DELIVERYDATE: DELIVERYDATE"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.PO_Header_Items/STATUS">
+                                        <Annotation Term="Common.Label" String="STATUS: STATUS"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.PO_Header_Items/CREATEDBY">
+                                        <Annotation Term="Common.Label" String="CREATEDBY: CREATEDBY"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.PO_Header_Items/PO_ITEM_NUM">
+                                        <Annotation Term="Common.Label" String="PO_ITEM_NUM: PO_ITEM_NUM"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.PO_Header_Items/QUANTITY">
+                                        <Annotation Term="Common.Label" String="QUANTITY: QUANTITY"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.PO_Header_Items/AMOUNT">
+                                        <Annotation Term="Common.Label" String="AMOUNT: AMOUNT"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.Purchase_Report/PO_Number">
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.Purchase_Report/PCode">
+                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.Purchase_Report/Quantity">
+                                        <Annotation Term="Validation.Minimum" Int="1"/>
+                                        <Annotation Term="Validation.Maximum" Int="100"/>
+                                    </Annotations>
+                                    <Annotations Target="PO_OverviewService.PO_Attachment/createdAt">
+                                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                        <Annotation Term="Core.Immutable" Bool="true"/>
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                                        </Annotations>
+                                        <Annotations Target="PO_OverviewService.PO_Attachment/createdBy">
+                                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                            <Annotation Term="Core.Immutable" Bool="true"/>
+                                            <Annotation Term="Core.Computed" Bool="true"/>
+                                            <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                                                </Annotations>
+                                                <Annotations Target="PO_OverviewService.PO_Attachment/modifiedAt">
+                                                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                                    <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                                                    </Annotations>
+                                                    <Annotations Target="PO_OverviewService.PO_Attachment/modifiedBy">
+                                                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                            <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                                            </Annotations>
+                                                            <Annotations Target="PO_OverviewService.PO_Attachment/File_Type">
+                                                                <Annotation Term="Core.IsMediaType" Bool="true"/>
+                                                                <Annotation Term="Core.Computed" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="PO_OverviewService.PO_Attachment/File">
+                                                                <Annotation Term="Core.MediaType" Path="File_Type"/>
+                                                                <Annotation Term="Core.ContentDisposition">
+                                                                    <Record Type="Core.ContentDispositionType">
+                                                                        <PropertyValue Property="Filename" Path="FileName"/>
+                                                                    </Record>
+                                                                </Annotation>
+                                                            </Annotations>
+                                                        </Schema>
+                                                    </edmx:DataServices>
+                                                </edmx:Edmx>

@@ -140,8 +140,9 @@
           "name": "sap.fe.templates.ObjectPage",
           "options": {
             "settings": {
+              "enhanceI18n": "i18n/i18n.properties" ,   
               "editableHeaderContent": false,
-              "contextPath": "/POHeader",
+              "contextPath": "/POHeader",   
               "navigation": {
                 "PO_Item_Master": {
                   "detail": {

@@ -279,6 +279,7 @@ annotate service.POHeader with actions {
      $edmJson: { $Eq: [{ $Path: 'in/Status'}, 1]}
    },
    Common.SideEffects.TargetProperties : ['in/Status'],
+   Common.IsActionCritical : true      
  ) 
 };  
 
@@ -288,8 +289,10 @@ annotate service.POHeader with actions {
      $edmJson: { $Eq: [{ $Path: 'in/Status'}, 1]}       
    },
    Common.SideEffects.TargetProperties : ['in/Status'],
+   Common.IsActionCritical : true   
  ) 
 }; 
+
 annotate service.POHeader with @(
     UI.HeaderInfo : {
         Title : {

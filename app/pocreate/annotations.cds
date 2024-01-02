@@ -96,6 +96,10 @@ annotate service.POItem with {
                         ValueListProperty : 'Plant_Code',
                         LocalDataProperty : PO_Header_Master.PCode,
                     },
+                    {
+                        $Type : 'Common.ValueListParameterDisplayOnly',
+                        ValueListProperty : 'Material_Image',   
+                    },
                 ],
             Label : 'Material ',
         },
@@ -265,24 +269,12 @@ annotate service.PO_Attachment with @(
     UI.LineItem #POAttachments : [
         {
             $Type : 'UI.DataField',
-            Value : PO_Number,
-            Label : 'PO_Number',
-        },{
-            $Type : 'UI.DataField',
             Value : File_Type,
             Label : 'File_Type',
         },{
             $Type : 'UI.DataField',
-            Value : FileChk,
-            Label : 'FileChk',
-        },{
-            $Type : 'UI.DataField',
             Value : FileName,
             Label : 'FileName',
-        },{
-            $Type : 'UI.DataField',
-            Value : MimeType,
-            Label : 'MimeType',
         },
         {
             $Type : 'UI.DataField',
@@ -345,9 +337,5 @@ annotate service.PO_Attachment with @(
             $Type : 'UI.DataField',
             Value : FileName,
             Label : 'FileName',
-        },{
-            $Type : 'UI.DataField',
-            Value : PO_Number,
-            Label : 'PO_Number',
-        },]
+        },]   
 );
