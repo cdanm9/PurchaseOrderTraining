@@ -1,0 +1,13 @@
+VIEW POODataService_POItem AS SELECT
+  PO_Item_0.ID,
+  PO_Item_0.PO_Number,
+  PO_Item_0.PO_Item_Num,
+  PO_Item_0.MCode,
+  PO_Item_0.Quantity,
+  PO_Item_0.Amount,
+  PO_Item_0.PO_Header_Master_ID
+FROM capm_table_PO_Item AS PO_Item_0
+WITH ASSOCIATIONS (
+  MANY TO ONE JOIN POODataService_Material_Master AS M_Master ON (M_Master.CODE = MCode),
+  MANY TO ONE JOIN POODataService_POHeader AS PO_Header_Master ON (PO_Header_Master.ID = PO_Header_Master_ID)
+)

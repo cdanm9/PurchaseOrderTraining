@@ -1,0 +1,7 @@
+VIEW PO_OverviewService_POEvent AS SELECT
+  Event_Log_0.PO_Number,
+  Event_Log_0.EVENT_CODE,
+  Event_Log_0.EVENT_DESCRIPTION,
+  Event_Log_0.EVENT_DATE,
+  Event_Log_0.EVENT_BY
+FROM capm_table_Event_Log AS Event_Log_0

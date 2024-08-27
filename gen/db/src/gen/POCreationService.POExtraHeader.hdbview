@@ -1,0 +1,17 @@
+VIEW POCreationService_POExtraHeader AS SELECT
+  PO_Extra_Header_0.createdAt,
+  PO_Extra_Header_0.createdBy,
+  PO_Extra_Header_0.modifiedAt,
+  PO_Extra_Header_0.modifiedBy,
+  PO_Extra_Header_0.ID,
+  PO_Extra_Header_0.PO_Number,
+  PO_Extra_Header_0.CreationDate,
+  PO_Extra_Header_0.DeliveryDate,
+  PO_Extra_Header_0.Status,
+  PO_Extra_Header_0.MadeBy,
+  PO_Extra_Header_0.PCode,
+  PO_Extra_Header_0.CompanyCode,
+  PO_Extra_Header_0.Delete,
+  PO_Extra_Header_0.Criticality,
+  PO_Extra_Header_0.Total_Amount
+FROM capm_table_PO_Extra_Header AS PO_Extra_Header_0

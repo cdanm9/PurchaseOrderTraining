@@ -1,0 +1,4 @@
+VIEW POODataService_StatusMaster AS SELECT
+  Status_Master_0.CODE,
+  Status_Master_0.DESC
+FROM capm_mastertable_Status_Master AS Status_Master_0

@@ -1,0 +1,13 @@
+VIEW POCreationService_Purchase_Attachment AS SELECT
+  Purchase_Attachment_0.ID,
+  Purchase_Attachment_0.createdAt,
+  Purchase_Attachment_0.createdBy,
+  Purchase_Attachment_0.modifiedAt,
+  Purchase_Attachment_0.modifiedBy,
+  Purchase_Attachment_0.PO_Number,
+  Purchase_Attachment_0.content,
+  Purchase_Attachment_0.mediaType,
+  Purchase_Attachment_0.fileName,
+  Purchase_Attachment_0.size,
+  Purchase_Attachment_0.url
+FROM capm_table_Purchase_Attachment AS Purchase_Attachment_0

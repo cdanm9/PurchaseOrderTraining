@@ -1,0 +1,18 @@
+COLUMN TABLE POApprovalService_POItem_drafts (
+  ID NVARCHAR(36) NOT NULL,
+  PO_Number BIGINT NULL,
+  PO_Item_Num INTEGER NULL,
+  MCode NVARCHAR(20) NULL,
+  Quantity INTEGER NULL,
+  Amount DECIMAL NULL,
+  PO_Header_Master_ID NVARCHAR(36) NULL,
+  IsActiveEntity BOOLEAN,
+  HasActiveEntity BOOLEAN,
+  HasDraftEntity BOOLEAN,
+  DraftAdministrativeData_DraftUUID NVARCHAR(36) NOT NULL,
+  PRIMARY KEY(ID)
+) WITH ASSOCIATIONS (
+  MANY TO ONE JOIN POApprovalService_Material_Master AS M_Master ON (M_Master.CODE = MCode),
+  MANY TO ONE JOIN POApprovalService_POHeader_drafts AS PO_Header_Master ON (PO_Header_Master.ID = PO_Header_Master_ID),
+  MANY TO ONE JOIN POApprovalService_DraftAdministrativeData AS DraftAdministrativeData ON (DraftAdministrativeData.DraftUUID = DraftAdministrativeData_DraftUUID)
+)

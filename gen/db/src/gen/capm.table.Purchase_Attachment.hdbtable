@@ -1,0 +1,14 @@
+COLUMN TABLE capm_table_Purchase_Attachment (
+  ID NVARCHAR(36) NOT NULL,
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  PO_Number BIGINT,
+  content BLOB,
+  mediaType NVARCHAR(5000),
+  fileName NVARCHAR(5000),
+  size INTEGER,
+  url NVARCHAR(5000),
+  PRIMARY KEY(ID)
+)

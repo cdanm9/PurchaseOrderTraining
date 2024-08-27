@@ -1,0 +1,5 @@
+COLUMN TABLE capm_mastertable_Status_Master (
+  CODE INTEGER NOT NULL,
+  DESC NVARCHAR(500),
+  PRIMARY KEY(CODE)
+)

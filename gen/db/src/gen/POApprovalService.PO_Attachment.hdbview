@@ -1,0 +1,15 @@
+VIEW POApprovalService_PO_Attachment AS SELECT
+  PO_Attachment_0.ID,
+  PO_Attachment_0.createdAt,
+  PO_Attachment_0.createdBy,
+  PO_Attachment_0.modifiedAt,
+  PO_Attachment_0.modifiedBy,
+  PO_Attachment_0.PO_Number,
+  PO_Attachment_0.File_Type,
+  PO_Attachment_0.File,
+  PO_Attachment_0.FileName,
+  PO_Attachment_0.AttachPOHeader_ID
+FROM capm_table_PO_Attachment AS PO_Attachment_0
+WITH ASSOCIATIONS (
+  MANY TO ONE JOIN POApprovalService_POHeader AS AttachPOHeader ON (AttachPOHeader.ID = AttachPOHeader_ID)
+)

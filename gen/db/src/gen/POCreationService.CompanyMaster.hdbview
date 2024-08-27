@@ -1,0 +1,6 @@
+VIEW POCreationService_CompanyMaster AS SELECT
+  Company_Master_0.CODE,
+  Company_Master_0.DESC,
+  Company_Master_0.WEBSITE,
+  Company_Master_0.NAME
+FROM capm_mastertable_Company_Master AS Company_Master_0

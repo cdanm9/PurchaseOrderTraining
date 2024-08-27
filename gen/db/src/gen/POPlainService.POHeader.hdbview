@@ -1,0 +1,25 @@
+VIEW POPlainService_POHeader AS SELECT
+  PO_Header_0.createdAt,
+  PO_Header_0.createdBy,
+  PO_Header_0.modifiedAt,
+  PO_Header_0.modifiedBy,
+  PO_Header_0.ID,
+  PO_Header_0.PO_Number,
+  PO_Header_0.CreationDate,
+  PO_Header_0.DeliveryDate,
+  PO_Header_0.Status,
+  PO_Header_0.MadeBy,
+  PO_Header_0.PCode,
+  PO_Header_0.CompanyCode,
+  PO_Header_0.Delete,
+  PO_Header_0.Criticality,
+  PO_Header_0.Total_Amount
+FROM capm_table_PO_Header AS PO_Header_0
+WITH ASSOCIATIONS (
+  MANY TO ONE JOIN POPlainService_PlantMaster AS Pl_Master ON (Pl_Master.CODE = PCode),
+  MANY TO ONE JOIN POPlainService_CompanyMaster AS Cp_Master ON (Cp_Master.CODE = CompanyCode),
+  MANY TO ONE JOIN POPlainService_StatusMaster AS S_Master ON (S_Master.CODE = Status),
+  MANY TO MANY JOIN POPlainService_POItem AS PO_Item_Master ON (PO_Item_Master.PO_Header_Master_ID = ID),
+  MANY TO MANY JOIN POPlainService_PO_Attachment AS PO_Attach_Master ON (PO_Attach_Master.AttachPOHeader_ID = ID),
+  MANY TO MANY JOIN POPlainService_POEvent AS PO_Event_Master ON (PO_Event_Master.PO_Number = PO_Number)
+)

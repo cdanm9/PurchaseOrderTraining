@@ -1,0 +1,5 @@
+VIEW POReportService_PlantMaster AS SELECT
+  Plant_Master_0.CODE,
+  Plant_Master_0.NAME,
+  Plant_Master_0.CITY
+FROM capm_mastertable_Plant_Master AS Plant_Master_0

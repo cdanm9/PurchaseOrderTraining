@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="PO_COMPANY" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="PO_COMPANY"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CAPM_MASTERTABLE_COMPANY_MASTER">
+    <resourceUri>CAPM_MASTERTABLE_COMPANY_MASTER</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews/>
+
+<logicalModel id="CAPM_MASTERTABLE_COMPANY_MASTER">
+  <attributes>
+    <attribute id="CODE" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CODE"/>
+      <keyMapping columnObjectName="CAPM_MASTERTABLE_COMPANY_MASTER" columnName="CODE"/>
+    </attribute>
+    <attribute id="DESC" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESC"/>
+      <keyMapping columnObjectName="CAPM_MASTERTABLE_COMPANY_MASTER" columnName="DESC"/>
+    </attribute>
+    <attribute id="WEBSITE" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEBSITE"/>
+      <keyMapping columnObjectName="CAPM_MASTERTABLE_COMPANY_MASTER" columnName="WEBSITE"/>
+    </attribute>
+    <attribute id="NAME" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="NAME"/>
+      <keyMapping columnObjectName="CAPM_MASTERTABLE_COMPANY_MASTER" columnName="NAME"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    
+  </shapes>
+</layout>
+</Calculation:scenario>

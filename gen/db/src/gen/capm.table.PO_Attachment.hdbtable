@@ -1,0 +1,15 @@
+COLUMN TABLE capm_table_PO_Attachment (
+  ID NVARCHAR(36) NOT NULL,
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  PO_Number BIGINT,
+  File_Type NVARCHAR(5000),
+  File BLOB,
+  FileName NVARCHAR(5000),
+  AttachPOHeader_ID NVARCHAR(36),
+  PRIMARY KEY(ID)
+) WITH ASSOCIATIONS (
+  MANY TO ONE JOIN capm_table_PO_Header AS AttachPOHeader ON (AttachPOHeader.ID = AttachPOHeader_ID)
+)

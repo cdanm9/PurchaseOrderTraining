@@ -1,0 +1,13 @@
+COLUMN TABLE capm_table_PO_Item (
+  ID NVARCHAR(36) NOT NULL,
+  PO_Number BIGINT NOT NULL,
+  PO_Item_Num INTEGER NOT NULL,
+  MCode NVARCHAR(20),
+  Quantity INTEGER,
+  Amount DECIMAL,
+  PO_Header_Master_ID NVARCHAR(36),
+  PRIMARY KEY(ID)
+) WITH ASSOCIATIONS (
+  MANY TO ONE JOIN capm_mastertable_Material_Master AS M_Master ON (M_Master.CODE = MCode),
+  MANY TO ONE JOIN capm_table_PO_Header AS PO_Header_Master ON (PO_Header_Master.ID = PO_Header_Master_ID)
+)

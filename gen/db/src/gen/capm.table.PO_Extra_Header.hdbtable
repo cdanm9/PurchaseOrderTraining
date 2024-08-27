@@ -1,0 +1,18 @@
+COLUMN TABLE capm_table_PO_Extra_Header (
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  ID NVARCHAR(36) NOT NULL,
+  PO_Number BIGINT NOT NULL,
+  CreationDate DATE,
+  DeliveryDate DATE,
+  Status INTEGER,
+  MadeBy NVARCHAR(20) DEFAULT 'CDAN',
+  PCode NVARCHAR(20),
+  CompanyCode NVARCHAR(20),
+  Delete NVARCHAR(1) DEFAULT '',
+  Criticality INTEGER DEFAULT 0,
+  Total_Amount DECIMAL DEFAULT 0,
+  PRIMARY KEY(ID)
+)

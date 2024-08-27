@@ -1,0 +1,14 @@
+COLUMN TABLE capm_mastertable_Material_Master (
+  CODE NVARCHAR(20) NOT NULL,
+  DESC NVARCHAR(500),
+  Plant_Code NVARCHAR(20),
+  Price DOUBLE DEFAULT 0.0,
+  Material_Image NVARCHAR(5000),
+  Phone NVARCHAR(20),
+  Fax NVARCHAR(20),
+  Email NVARCHAR(240),
+  LandLine NVARCHAR(20),
+  PRIMARY KEY(CODE)
+) WITH ASSOCIATIONS (
+  MANY TO ONE JOIN capm_mastertable_Plant_Master AS Pl_Master ON (Pl_Master.CODE = Plant_Code)
+)

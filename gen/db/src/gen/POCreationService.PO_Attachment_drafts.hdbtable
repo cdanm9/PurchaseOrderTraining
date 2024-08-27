@@ -1,0 +1,20 @@
+COLUMN TABLE POCreationService_PO_Attachment_drafts (
+  ID NVARCHAR(36) NOT NULL,
+  createdAt TIMESTAMP NULL,
+  createdBy NVARCHAR(255) NULL,
+  modifiedAt TIMESTAMP NULL,
+  modifiedBy NVARCHAR(255) NULL,
+  PO_Number BIGINT NULL,
+  File_Type NVARCHAR(5000) NULL,
+  File BLOB NULL,
+  FileName NVARCHAR(5000) NULL,
+  AttachPOHeader_ID NVARCHAR(36) NULL,
+  IsActiveEntity BOOLEAN,
+  HasActiveEntity BOOLEAN,
+  HasDraftEntity BOOLEAN,
+  DraftAdministrativeData_DraftUUID NVARCHAR(36) NOT NULL,
+  PRIMARY KEY(ID)
+) WITH ASSOCIATIONS (
+  MANY TO ONE JOIN POCreationService_POHeader_drafts AS AttachPOHeader ON (AttachPOHeader.ID = AttachPOHeader_ID),
+  MANY TO ONE JOIN POCreationService_DraftAdministrativeData AS DraftAdministrativeData ON (DraftAdministrativeData.DraftUUID = DraftAdministrativeData_DraftUUID)
+)

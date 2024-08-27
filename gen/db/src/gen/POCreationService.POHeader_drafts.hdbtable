@@ -1,0 +1,30 @@
+COLUMN TABLE POCreationService_POHeader_drafts (
+  createdAt TIMESTAMP NULL,
+  createdBy NVARCHAR(255) NULL,
+  modifiedAt TIMESTAMP NULL,
+  modifiedBy NVARCHAR(255) NULL,
+  ID NVARCHAR(36) NOT NULL,
+  PO_Number BIGINT NULL,
+  CreationDate DATE NULL,
+  DeliveryDate DATE NULL,
+  Status INTEGER NULL,
+  MadeBy NVARCHAR(20) NULL DEFAULT 'CDAN',
+  PCode NVARCHAR(20) NULL,
+  CompanyCode NVARCHAR(20) NULL,
+  Delete NVARCHAR(1) NULL DEFAULT '',
+  Criticality INTEGER NULL DEFAULT 0,
+  Total_Amount DECIMAL NULL DEFAULT 0,
+  IsActiveEntity BOOLEAN,
+  HasActiveEntity BOOLEAN,
+  HasDraftEntity BOOLEAN,
+  DraftAdministrativeData_DraftUUID NVARCHAR(36) NOT NULL,
+  PRIMARY KEY(ID)
+) WITH ASSOCIATIONS (
+  MANY TO ONE JOIN POCreationService_PlantMaster AS Pl_Master ON (Pl_Master.CODE = PCode),
+  MANY TO ONE JOIN POCreationService_CompanyMaster AS Cp_Master ON (Cp_Master.CODE = CompanyCode),
+  MANY TO ONE JOIN POCreationService_StatusMaster AS S_Master ON (S_Master.CODE = Status),
+  MANY TO MANY JOIN POCreationService_POItem_drafts AS PO_Item_Master ON (PO_Item_Master.PO_Header_Master_ID = ID),
+  MANY TO MANY JOIN POCreationService_PO_Attachment_drafts AS PO_Attach_Master ON (PO_Attach_Master.AttachPOHeader_ID = ID),
+  MANY TO MANY JOIN POCreationService_POEvent AS PO_Event_Master ON (PO_Event_Master.PO_Number = PO_Number),
+  MANY TO ONE JOIN POCreationService_DraftAdministrativeData AS DraftAdministrativeData ON (DraftAdministrativeData.DraftUUID = DraftAdministrativeData_DraftUUID)
+)

@@ -1,0 +1,25 @@
+COLUMN TABLE capm_table_PO_Header (
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  ID NVARCHAR(36) NOT NULL,
+  PO_Number BIGINT NOT NULL,
+  CreationDate DATE,
+  DeliveryDate DATE,
+  Status INTEGER,
+  MadeBy NVARCHAR(20) DEFAULT 'CDAN',
+  PCode NVARCHAR(20),
+  CompanyCode NVARCHAR(20),
+  Delete NVARCHAR(1) DEFAULT '',
+  Criticality INTEGER DEFAULT 0,
+  Total_Amount DECIMAL DEFAULT 0,
+  PRIMARY KEY(ID)
+) WITH ASSOCIATIONS (
+  MANY TO ONE JOIN capm_mastertable_Plant_Master AS Pl_Master ON (Pl_Master.CODE = PCode),
+  MANY TO ONE JOIN capm_mastertable_Company_Master AS Cp_Master ON (Cp_Master.CODE = CompanyCode),
+  MANY TO ONE JOIN capm_mastertable_Status_Master AS S_Master ON (S_Master.CODE = Status),
+  MANY TO MANY JOIN capm_table_PO_Item AS PO_Item_Master ON (PO_Item_Master.PO_Header_Master_ID = ID),
+  MANY TO MANY JOIN capm_table_PO_Attachment AS PO_Attach_Master ON (PO_Attach_Master.AttachPOHeader_ID = ID),
+  MANY TO MANY JOIN capm_table_Event_Log AS PO_Event_Master ON (PO_Event_Master.PO_Number = PO_Number)
+)

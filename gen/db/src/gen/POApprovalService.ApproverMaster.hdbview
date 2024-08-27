@@ -1,0 +1,6 @@
+VIEW POApprovalService_ApproverMaster AS SELECT
+  Approver_Master_0.USER_NAME,
+  Approver_Master_0.NAME,
+  Approver_Master_0.PASSCODE,
+  Approver_Master_0.LEVEL
+FROM capm_mastertable_Approver_Master AS Approver_Master_0

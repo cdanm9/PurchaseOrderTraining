@@ -1,0 +1,14 @@
+VIEW POCreationService_Material_Master AS SELECT
+  Material_Master_0.CODE,
+  Material_Master_0.DESC,
+  Material_Master_0.Plant_Code,
+  Material_Master_0.Price,
+  Material_Master_0.Material_Image,
+  Material_Master_0.Phone,
+  Material_Master_0.Fax,
+  Material_Master_0.Email,
+  Material_Master_0.LandLine
+FROM capm_mastertable_Material_Master AS Material_Master_0
+WITH ASSOCIATIONS (
+  MANY TO ONE JOIN POCreationService_PlantMaster AS Pl_Master ON (Pl_Master.CODE = Plant_Code)
+)
