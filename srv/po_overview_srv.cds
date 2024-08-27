@@ -15,9 +15,7 @@ service PO_OverviewService{
      @readonly
      entity POStarReport as projection on PO_STAR_JOIN;
      @readonly  
-     entity PO_Header_Items as projection on POHEADERITEMS;
-     define view Purchase_Report as SELECT POHeader.PO_Number,POHeader.PCode,POItem.Quantity,POItem.MCode,POItem.Amount FROM
-     POHeader INNER JOIN POItem ON POHeader.PO_Number = POItem.PO_Number;   
+     entity PO_Header_Items as projection on POHEADERITEMS;  
 
      type oPOHeader:many{
           PO_NUMBER: Integer64; 

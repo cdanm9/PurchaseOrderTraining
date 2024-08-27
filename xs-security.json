@@ -1,0 +1,65 @@
+{
+  "xsappname":"PurchaseOrderAdvanced-a205e616trial-dev",
+  "tenant-mode":"dedicated",
+  "scopes": [
+    {
+      "name": "uaa.user",
+      "description": "UAA"    
+    },    
+    {
+      "name": "$XSAPPNAME.ZPO_ADMIN",
+      "description": "ZPO_ADMIN",   
+      "granted-apps" : [ 
+        "$XSAPPNAME(application,92561479-dfe4-4098-9b79-fd1fa761e317,podashboard)"   
+      ],   
+      "grant-as-authority-to-apps" : [ 
+        "$XSAPPNAME(application,92561479-dfe4-4098-9b79-fd1fa761e317,podashboard)"
+      ]         
+    },
+    {
+      "name": "$XSAPPNAME.ZPO_INITIATOR",
+      "description": "ZPO_INITIATOR"
+    }
+  ],
+  "attributes": [],
+  "role-templates": [
+    {
+      "name": "Token_Exchange",
+      "description": "UAA",
+      "scope-references": [     
+        "uaa.user"
+      ]              
+    },    
+    {
+      "name": "ZPO_ADMIN",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.ZPO_ADMIN"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "ZPO_INITIATOR",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.ZPO_INITIATOR"
+      ],
+      "attribute-references": []
+    }
+  ],
+  "oauth2-configuration": {
+    "credential-types": [
+      "binding-secret",
+      "x509"
+    ],    
+    "redirect-uris": [     
+      "http://localhost:5000/",
+      "https://port5000-workspaces-ws-q5vjd.us10.trial.applicationstudio.cloud.sap/",
+      "https://*.applicationstudio.cloud.sap/**",
+      "https://a205e616trial-dev-purchaseorderadvanced.cfapps.us10-001.hana.ondemand.com/",
+      "https://a205e616trial-dev-purchaseorderadvanced-srv.cfapps.us10-001.hana.ondemand.com/",
+      "https://oauth.pstmn.io/v1/browser-callback/",
+      "https://port8080-workspaces-ws-q5vjd.us10.trial.applicationstudio.cloud.sap/"             
+    ]
+  }
+}

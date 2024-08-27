@@ -24,7 +24,6 @@ annotate POReportService.POHeader with @(
             'concat',
             'groupby',
             'filter',
-            'expand',
             'search'
         ],
         GroupableProperties : [

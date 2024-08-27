@@ -4,8 +4,19 @@ const { uuid } = require("@sap/cds/lib/utils/cds-utils");
 const dbClass = require("sap-hdbext-promisfied")
 const hdbext = require("@sap/hdbext")
 module.exports=cds.service.impl(function(srv){
-    const { POHeader, POItem,PO_Attachment,Purchase_Attachment } = this.entities;   
+    const { POHeader, POItem,PO_Attachment,Purchase_Attachment,POEvent } = this.entities;   
     var iPurchaseNum;
+    // POReturn
+    this.on("POReturn",async(req)=>{
+        const { PO_Number } = req.data
+        const aPOEvent = await SELECT .from (POEvent) .where `PO_Number = ${PO_Number}` 
+        var oPOTest;
+        if(aPOEvent.length!=0)   
+         oPOTest={POTest:true}
+        else 
+         oPOTest={POTest:false}    
+        return oPOTest
+    });
     this.on("POCreate",async(req)=>{
         try{
             var client=dbClass.createConnectionFromEnv()

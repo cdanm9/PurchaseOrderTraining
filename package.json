@@ -1,27 +1,28 @@
 {
-  "name": "PurchaseOrder",
+  "name": "PurchaseOrderAdvanced",
   "version": "1.0.0",
-  "description": "A simple CAP project.",
-  "repository": "<Add your repository here>",
+  "description": "Purchase Order",
+  "repository": "PurchaseOrderAdvanced",
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@sap/cds": "^6.8.4",
-    "@sap/cds-hana": "^2",
+    "@sap/cds": "^7.9.3",
+    "@sap/cds-hana": "^2.0.0",
     "@sap/cds-odata-v2-adapter-proxy": "^1.9.21",
-    "@sap/hana-client": "^2.17.22",
-    "@sap/hdbext": "^7.7.5",
+    "@sap/hana-client": "^2.21.28",
+    "@sap/hdbext": "^8.0.5",
+    "@sap/xsenv": "^5.1.0",
     "@sap/xssec": "^3",
-    "express": "^4.18.2",
-    "hdb": "^0.19.5",
-    "passport": "^0",
-    "sap-hdbext-promisfied": "^2.202306.2"
+    "express": "^4.19.2",
+    "hdb": "^0.19.9",
+    "passport": "^0.7.0",
+    "sap-hdbext-promisfied": "^2.202405.1"
   },
   "devDependencies": {
-    "@sap/cds-dk": "^7",
-    "@sap/hdi-deploy": "4.8.2",
-    "@sap/ux-specification": "^1.120.1",
-    "rimraf": "^3.0.2"
+    "@sap/cds-dk": "^7.9.4",
+    "@sap/hdi-deploy": "^5.2.0",
+    "@sap/ux-specification": "^1.120.14",
+    "rimraf": "^6.0.0"
   },
   "scripts": {
     "start": "cds-serve",
@@ -34,8 +35,15 @@
     "watch-project1": "cds watch --open project1/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "cds": {
+    "fiori": {
+      "bypass_draft": true
+    },
     "requires": {
-      "db": "hana"
+      "db": "hana",
+      "[hybrid]": {
+        "auth": "xsuaa"
+      },
+      "auth": "xsuaa"
     },
     "hana": {
       "deploy-format": "hdbtable"

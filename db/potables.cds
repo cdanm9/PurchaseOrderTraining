@@ -4,13 +4,14 @@ context capm.table{
 
   entity PO_Header: managed,cuid{
     // key POH_Unique: UUID; 
-    @readonly @mandatory PO_Number: Integer64 not null; 
+     PO_Number: Integer64 not null; 
     CreationDate: Date;
     DeliveryDate: Date;
     Status: Integer; 
+    @Search.fuzzinessThreshold: 0.7   
     MadeBy: String(20) default 'CDAN';    
-    @mandatory PCode: String(20); 
-    @mandatory CompanyCode: String(20); 
+     PCode: String(20); 
+     CompanyCode: String(20); 
     Delete: String(1) default '';
     Criticality: Integer default 0;    
     Total_Amount: Decimal default 0;          
@@ -19,14 +20,13 @@ context capm.table{
     S_Master: Association to masters.Status_Master on S_Master.CODE=Status;
     PO_Item_Master: Composition of many PO_Item on PO_Item_Master.PO_Header_Master=$self;                       
     PO_Attach_Master: Composition of many PO_Attachment on PO_Attach_Master.AttachPOHeader=$self;                       
-    PO_Event_Master: Association to many Event_Log on PO_Event_Master.PO_Number=PO_Number;       
-    PO_Asso_Master: Association to many Purchase_Attachment on PO_Number=PO_Asso_Master.PO_Number;   
+    PO_Event_Master: Association to many Event_Log on PO_Event_Master.PO_Number=PO_Number;    
   };
 
   entity PO_Item: cuid{         
     // key POI_Unique: UUID;
-    @readonly PO_Number: Integer64 not null;
-    @readonly PO_Item_Num:Integer not null; 
+     PO_Number: Integer64 not null;
+     PO_Item_Num:Integer not null; 
     MCode: String(20);    
     Quantity: Integer @assert.range:[1,100];          
     Amount: Decimal; 
@@ -44,7 +44,7 @@ context capm.table{
   }
 
   entity PO_Attachment: cuid,managed{
-    PO_Number: Integer64; @readonly
+    PO_Number: Integer64; 
     @Core.IsMediaType: true File_Type:String;
     @Core.MediaType:File_Type File:LargeBinary @Core.ContentDisposition.Filename: FileName;    
     FileName: String;

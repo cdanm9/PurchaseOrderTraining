@@ -1,1 +1,0 @@
-sap.ui.define(["sap/ovp/app/Component"],function(e){"use strict";return e.extend("overviewcapm.Component",{metadata:{manifest:"json"}})});

@@ -1,7 +1,7 @@
 _schema-version: '3.1'
-ID: PurchaseOrder
+ID: PurchaseOrderAdvanced
 version: 1.0.0
-description: "A simple CAP project."
+description: "Purchase Order Advanced"
 parameters:
   enable-parallel-deployments: true
 build-parameters:
@@ -10,7 +10,7 @@ build-parameters:
       commands:
         - npx cds build --production
 modules:
-  - name: PurchaseOrder-srv
+  - name: PurchaseOrderAdvanced-srv
     type: nodejs
     path: gen/srv
     parameters:
@@ -22,19 +22,46 @@ modules:
         properties:
           srv-url: ${default-url}
     requires:
-      - name: PurchaseOrder-db
+      - name: PurchaseOrderAdvanced-db
+      - name: PurchaseOrderAdvanced-auth
 
-  - name: PurchaseOrder-db-deployer
+  - name: PurchaseOrderAdvanced-db-deployer
     type: hdb
     path: gen/db
     parameters:
       buildpack: nodejs_buildpack
     requires:
-      - name: PurchaseOrder-db
+      - name: PurchaseOrderAdvanced-db
+
+  - name: PurchaseOrderAdvanced
+    type: approuter.nodejs
+    path: app/router
+    parameters:
+      keep-existing-routes: true
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api # must be used in xs-app.json as well
+          url: ~{srv-url}
+          forwardAuthToken: true
+      - name: PurchaseOrderAdvanced-auth
 
 resources:
-  - name: PurchaseOrder-db
+  - name: PurchaseOrderAdvanced-db
     type: com.sap.xs.hdi-container
     parameters:
       service: hana
       service-plan: hdi-shared
+  - name: PurchaseOrderAdvanced-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: PurchaseOrderAdvanced-${org}-${space}
+        # xsappname: PurchaseOrderAdvanced-xsapp
+        tenant-mode: dedicated
